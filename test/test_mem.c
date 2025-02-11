@@ -17,6 +17,18 @@ void test_memeq(void** state){
 
 }
 
+void test_memset(void** state){
+    const char result[10] = "eeeeeeeeee";
+    char buf[10];
+    void* r;
+    int val = (int)'e';
+
+    r = dast_memset(buf, val, sizeof buf);
+
+    assert_ptr_equal(r, buf);
+    assert_memory_equal(buf, result, sizeof buf);
+}
+
 void test_memcpy(void**state){
     const char a[] = "Test String";
     char b[sizeof a];

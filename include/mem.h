@@ -11,6 +11,15 @@
 */
 dast_bool dast_memeq(const void* lhs, const void* rhs, dast_sz size);
 
+/** Sets `size` bytes of `dest` to the value of `ch`.
+ * @param dest Destination buffer
+ * @param ch   Value to set
+ * @param size Number of bytes to set
+ * @returns `dest` on success, or NULL if `dest` is NULL
+ * @note if `ch` is greater than CHAR_MAX, its value is truncated to CHAR_MAX
+*/
+void* dast_memset(void* dest, int ch, dast_sz size);
+
 /** Copies `size` bytes from `src` to `dest`.
  * @param dest Destination
  * @param src Source location

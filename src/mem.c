@@ -11,6 +11,15 @@ dast_bool dast_memeq(const void* lhs, const void* rhs, dast_sz size){
 #endif
 }
 
+void* dast_memset(void* dest, int ch, dast_sz size){
+#if DAST_NO_STDLIB
+    register dast_u8 *d = (dast_u8*)dest;
+    while(size-- > 0) *d++ = (unsigned char)ch;
+    return dest
+#else
+    return memset(dest, ch, size);
+#endif
+}
 
 void* dast_memcpy(void* dest, const void* src, dast_sz size){
 #if DAST_NO_STDLIB
