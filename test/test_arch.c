@@ -8,21 +8,21 @@
 #include <cmocka.h>
 
 
-void test_i8  (void** state) { assert_int_equal(sizeof(dast_i8),   1); }
-void test_u8  (void** state) { assert_int_equal(sizeof(dast_u8),   1); }
-void test_i16 (void** state) { assert_int_equal(sizeof(dast_i16),  2); }
-void test_u16 (void** state) { assert_int_equal(sizeof(dast_u16),  2); }
-void test_i32 (void** state) { assert_int_equal(sizeof(dast_i32),  4); }
-void test_u32 (void** state) { assert_int_equal(sizeof(dast_u32),  4); }
-void test_i64 (void** state) { assert_int_equal(sizeof(dast_i64),  8); }
-void test_u64 (void** state) { assert_int_equal(sizeof(dast_u64),  8); }
-void test_bool(void** state) { assert_int_equal(sizeof(dast_bool), 4); }
+void test_i8  (void** state) { assert_int_equal(sizeof(dast_i8),   sizeof(int8_t)); }
+void test_u8  (void** state) { assert_int_equal(sizeof(dast_u8),   sizeof(uint8_t)); }
+void test_i16 (void** state) { assert_int_equal(sizeof(dast_i16),  sizeof(int16_t)); }
+void test_u16 (void** state) { assert_int_equal(sizeof(dast_u16),  sizeof(uint16_t)); }
+void test_i32 (void** state) { assert_int_equal(sizeof(dast_i32),  sizeof(int32_t)); }
+void test_u32 (void** state) { assert_int_equal(sizeof(dast_u32),  sizeof(uint32_t)); }
+void test_i64 (void** state) { assert_int_equal(sizeof(dast_i64),  sizeof(int64_t)); }
+void test_u64 (void** state) { assert_int_equal(sizeof(dast_u64),  sizeof(uint64_t)); }
+void test_bool(void** state) { assert_int_equal(sizeof(dast_bool), sizeof(int)); }
 
 void test_sz  (void** state) {
 #if defined(DAST_32BIT)
-    assert_int_equal(sizeof(dast_sz),   4);
+    assert_int_equal(sizeof(dast_sz),   sizeof(size_t));
 #elif defined(DAST_64BIT)
-    assert_int_equal(sizeof(dast_sz),   8);
+    assert_int_equal(sizeof(dast_sz),   sizeof(size_t));
 #endif
 }
 

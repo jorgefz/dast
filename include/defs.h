@@ -6,7 +6,7 @@
  * +-----------------+----------------------------------------+
  * | Macro           | Description                            |
  * +-----------------+----------------------------------------+
- * | DAST_NO_STD     | Disables all standard library includes |
+ * | DAST_NO_STDLIB  | Disables all standard library includes |
  * | DAST_ALLOC      | Custom global memory alloc             |
  * | DAST_REALLOC    | Custom global memory realloc           |
  * | DAST_FREE       | Custom global memory free              |
@@ -39,7 +39,7 @@
 #endif
 
 
-#ifdef DAST_NO_STD
+#ifdef DAST_NO_STDLIB
 
     /* Fixed types */
     #if defined(DAST_32BIT)
@@ -79,7 +79,6 @@
 
 #else
 
-    /* #include <stdlib.h> */ /* printf */
     #include <string.h> /* memcmp, memcpy, memmove */
     #include <stdint.h> /* sized types (e.g. uint32_t) */
     #include <stddef.h> /* size_t, NULL */
@@ -102,34 +101,6 @@ typedef dast_u32 dast_bool; /**< Boolean type */
 #define dast_true  (dast_bool)1 /**< Boolean true */
 #define dast_false (dast_bool)0 /**< Boolean false */
 
-
-/** Compares `size` bytes between two memory locations `lhs` and `rhs`.
- * @param lhs First memory location at which to compare data
- * @param rhs Second memory location at which to compare data
- * @param size Number of bytes to compare 
- * @returns `dast_true` if they are equal, and `dast_false` otherwise.
-*/
-dast_bool dast_memeq(const void* lhs, const void* rhs, dast_sz size);
-
-/** Copies `size` bytes from `src` to `dest`.
- * @param dest Destination
- * @param src Source location
- * @param size Number of bytes to copy
- * @returns `dest` on success, and NULL if `dest` or `src` are NULL.
- * @note It performs a copy forward, and so it is not suitable for overlapping memory segments.
-*/
-void* dast_memcpy(void* dest, const void* src, dast_sz size);
-
-/** Copies `size` bytes from `src` to `dest`, handling overlapping segments.
- * @param dest Destination
- * @param src Source location
- * @param size Number of bytes to copy
- * @returns `dest` on success, and NULL if `dest` or `src` are NULL.
- * @note When dest <= src, its behaviour is identical to memcpy.
-*/
-void* dast_memmove(void* dest, const void* src, dast_sz size);
-
-
 /* Memory allocation */
 typedef void* (*dast_alloc_t)  (dast_sz size);                 /**< Typedef for memory allocation function */ 
 typedef void* (*dast_realloc_t)(void* block, dast_sz newsize); /**< Typedef for memory reallocation function */
@@ -143,12 +114,11 @@ typedef struct dast_allocator {
 } dast_allocator_t;
 
 /* Default allocator */
-#ifdef DAST_NO_STDIO
+#ifdef DAST_NO_STDLIB
     #define DAST_DEFAULT_ALLOCATOR (dast_allocator_t){0}
 #else
     #define DAST_DEFAULT_ALLOCATOR (dast_allocator_t){malloc, realloc, free}
 #endif
-
 
 /* Hashing */
 #ifdef DAST_HASH_64BIT

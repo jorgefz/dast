@@ -17,7 +17,7 @@ workspace "dast"
         architecture "x86_64"
 
     filter "configurations:*NoSTD*"
-        defines { "DAST_NO_STD" }
+        defines { "DAST_NO_STDLIB" }
 
     filter ""
 

@@ -1,8 +1,7 @@
-#include "defs.h"
-
+#include "mem.h"
 
 dast_bool dast_memeq(const void* lhs, const void* rhs, dast_sz size){
-#if DAST_NO_STDIO
+#if DAST_NO_STDLIB
     register const dast_u8 *s1 = (const dast_u8*)lhs;
     register const dast_u8 *s2 = (const dast_u8*)rhs;
     while(size-- > 0) if (*s1++ != *s2++) return dast_false;
@@ -14,8 +13,8 @@ dast_bool dast_memeq(const void* lhs, const void* rhs, dast_sz size){
 
 
 void* dast_memcpy(void* dest, const void* src, dast_sz size){
-#if DAST_NO_STDIO
-    register const dast_u8 *d = (const dast_u8*)dest;
+#if DAST_NO_STDLIB
+    register       dast_u8 *d = (      dast_u8*)dest;
     register const dast_u8 *s = (const dast_u8*)src;
     while(size-- > 0) *d++ = *s++;
     return dest;
@@ -26,9 +25,9 @@ void* dast_memcpy(void* dest, const void* src, dast_sz size){
 
 
 void* dast_memmove(void* dest, const void* src, dast_sz size){
-#if DAST_NO_STDIO
+#if DAST_NO_STDLIB
     if(dest <= src) return dast_memcpy(dest, src, size);
-    register const dast_u8 *d = (const dast_u8*)dest + size - 1;
+    register       dast_u8 *d = (      dast_u8*)dest + size - 1;
     register const dast_u8 *s = (const dast_u8*)src + size - 1;
     while(size-- < 0) *d-- = *s--;
     return dest;
