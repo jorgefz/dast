@@ -52,14 +52,6 @@
         typedef unsigned int   dast_u32;
         typedef unsigned long  dast_sz;
 
-        #if defined(_MSC_VER)
-            typedef          __int64 dast_i64;
-            typedef unsigned __int64 dast_u64;
-        #else
-            typedef          long long dast_i64;
-            typedef unsigned long long dast_u64;
-        #endif
-
     #elif defined(DAST_64BIT)
     
         typedef          char  dast_i8;
@@ -68,14 +60,21 @@
         typedef unsigned short dast_u16;
         typedef          int   dast_i32;
         typedef unsigned int   dast_u32;
-        typedef          long  dast_i64;
-        typedef unsigned long  dast_u64;
-        typedef unsigned long  dast_sz;
+        typedef unsigned long long dast_sz;
     
     #endif
 
+    /* 64-bit int types */
+    #if defined(_MSC_VER)
+        typedef          __int64 dast_i64;
+        typedef unsigned __int64 dast_u64;
+    #else
+        typedef          long long dast_i64;
+        typedef unsigned long long dast_u64;
+    #endif
+
     /* Constants */
-    #define NULL ((void*)0)
+    #define NULL ((void*)0) /* Use dast_nil or dast_null instead */
 
 #else
 

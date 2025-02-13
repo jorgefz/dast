@@ -15,6 +15,7 @@ typedef struct dast_array {
 					  If the array has a size of zero, then begin==end. */
 	void* end;   /**< Pointer to the element after the last element of the array.
 	                  If the array has a size of zero, then begin==end. */
+    dast_allocator_t alloc; /**< Memory allocation functions */
 } array_t;
 
 
@@ -22,25 +23,25 @@ typedef struct dast_array {
 *   Should be freed with `array_uninit`.
 *	@param array the return array.
 *	@param element_size size in bytes of an array element, must be greater than zero
-*   @returns 1 if successful, and 0 otherwise.
+*   @returns `array` if successful, NULL if `array` is NULL or `element_size` is zero.
+*   @note Uses standard library malloc-family functions.
 */
-int array_init(array_t* array, dast_sz element_size);
+array_t* array_init(array_t* array, dast_sz element_size);
+
+/** @brief Initialises an array via a given pointer.
+*   Should be freed with `array_uninit`.
+*	@param array the return array.
+*	@param element_size size in bytes of an array element, must be greater than zero.
+*   @param alloc Allocation functions.
+*   @returns `array` if successful, NULL if `array` is NULL or `element_size` is zero,
+*    or any function in `alloc` is NULL.
+*/
+array_t* array_init_custom(array_t* array, dast_sz element_size, dast_allocator_t alloc);
 
 /** @brief Resets the array state and frees the memory pool.
 *	@param array the array to uninitialise.
 */
 void array_uninit(array_t* array);
-
-/** @brief Returns a pointer to a new array allocated on the heap
-*   Should be later freed with `array_destroy`.
-*	@param element_size size in bytes of an array element.
-*/
-array_t* array_create(dast_sz element_size);
-
-/** @brief Frees an allocated array
-*	@param array the array to deallocate.
-*/
-void array_destroy(array_t* array); // should also free array_t itself
 
 /** @brief Copies an array into another.
  * The source array must be initialised, and
@@ -50,11 +51,6 @@ void array_destroy(array_t* array); // should also free array_t itself
  *  @returns `dest` if successful, and NULL otherwise.
 */
 array_t* array_copy(array_t* dest, array_t* src);
-
-/** @brief Duplicates an array, allocating the new copy on the heap.
-*	@param array the array to copy.
-*/
-array_t* array_new_copy(array_t* orig);
 
 /* Initialises an array from existing data
 If a size of zero or empty data are provided, no elements are added to the array.

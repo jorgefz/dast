@@ -41,7 +41,7 @@ project "test"
     location "build/%{prj.name}"
     objdir ("obj/" .. OutputDir .. "/%{prj.name}" )
     targetdir ("bin/" .. OutputDir .. "/%{prj.name}" )
-    files { "test/**.c" }
+    files { "test/**.c", "test/**.h" }
     links { "dast" }
     includedirs { "include" }
 

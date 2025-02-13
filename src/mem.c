@@ -15,7 +15,7 @@ void* dast_memset(void* dest, int ch, dast_sz size){
 #if DAST_NO_STDLIB
     register dast_u8 *d = (dast_u8*)dest;
     while(size-- > 0) *d++ = (unsigned char)ch;
-    return dest
+    return dest;
 #else
     return memset(dest, ch, size);
 #endif
@@ -38,7 +38,7 @@ void* dast_memmove(void* dest, const void* src, dast_sz size){
     if(dest <= src) return dast_memcpy(dest, src, size);
     register       dast_u8 *d = (      dast_u8*)dest + size - 1;
     register const dast_u8 *s = (const dast_u8*)src + size - 1;
-    while(size-- < 0) *d-- = *s--;
+    while(size-- > 0) *d-- = *s--;
     return dest;
 #else
     return memmove(dest, src, size);
