@@ -8,14 +8,20 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include <stdlib.h>
 
+#define TEST_ALLOCATOR (dast_allocator_t){malloc, realloc, free}
 
 
 // Verifies array is initialised properly
 void test_array_init(void** state){
 	(void)state;
 	array_t a, *success;
+#ifdef DAST_NO_STDLIB
+	success = array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
+#else
 	success = array_init(&a, sizeof(int));
+#endif
 	assert_non_null(success);
 	assert_int_equal(a.size, 0);
 	assert_int_equal(a.element_size, sizeof(int));
@@ -31,15 +37,8 @@ void test_array_init(void** state){
 void test_array_init_zero_element_size(void** state){
 	(void)state;
 	array_t a, *success;
-	success = array_init(&a, 0);
-	assert_non_null(success);
-	assert_int_equal(a.size, 0);
-	assert_int_equal(a.element_size, 0);
-	assert_int_equal(a.capacity, 0);
-	assert_null(a.data);
-	assert_null(a.begin);
-	assert_null(a.end);
-	array_uninit(&a);
+	success = array_init_custom(&a, 0, TEST_ALLOCATOR);
+	assert_null(success);
 }
 
 // Verifies an array fails to initialise
@@ -47,7 +46,7 @@ void test_array_init_zero_element_size(void** state){
 void test_array_init_null(void** state){
 	(void)state;
 	array_t* success;
-	success = array_init(NULL, sizeof(int));
+	success = array_init_custom(NULL, sizeof(int), TEST_ALLOCATOR);
 	assert_null(success);
 }
 
@@ -56,7 +55,7 @@ void test_array_init_null(void** state){
 void test_array_resize_larger(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	uint32_t new_size = 5;
 	uint32_t new_capacity = 8; // Nearest power of two
 	void* success = array_resize(&a, new_size);
@@ -75,7 +74,7 @@ void test_array_resize_larger(void** state){
 void test_array_resize_smaller(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	uint32_t new_size = 5;
 	uint32_t new_capacity = 8; // Nearest power of two
 	array_resize(&a, new_size);
@@ -98,7 +97,7 @@ void test_array_resize_smaller(void** state){
 void test_array_resize_same(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	uint32_t new_size = 5;
 	uint32_t new_capacity = 8; // Nearest power of two
 	array_resize(&a, new_size);
@@ -120,7 +119,7 @@ void test_array_resize_same(void** state){
 void test_array_resize_zero(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	uint32_t new_size = 5;
 	uint32_t new_capacity = 8; // Nearest power of two
 	array_resize(&a, new_size);
@@ -141,7 +140,7 @@ void test_array_resize_zero(void** state){
 void test_array_uninit(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, 10);
 	array_uninit(&a);
 
@@ -156,7 +155,7 @@ void test_array_set(void** state){
 	(void)state;
 	array_t a;
 	int v = 8;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, 1);
 	int* item = array_set(&a, &v, 0);
 
@@ -172,7 +171,7 @@ void test_array_set(void** state){
 void test_array_set_null(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, 1);
 	int* item = array_set(&a, NULL, 0);
 
@@ -190,7 +189,7 @@ void test_array_set_out_of_bounds(void** state){
 	array_t a;
 	uint32_t size = 5;
 	int v = 8;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	int* item = array_set(&a, &v, size);
 	assert_null(item);
@@ -202,7 +201,7 @@ void test_array_get(void** state){
 	(void)state;
 	array_t a;
 	int v = 8;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, 1);
 	int* set = array_set(&a, &v, 0);
 	int* get = array_get(&a, 0);
@@ -221,7 +220,7 @@ void test_array_get_out_of_bounds(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 1;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	int* get = array_get(&a, size);
 	assert_null(get);
@@ -234,7 +233,7 @@ void test_array_front_back_end(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	void* front = array_front(&a);
 	void* back = array_back(&a);
@@ -256,7 +255,7 @@ void test_array_front_back_end(void** state){
 void test_array_front_back_end_zero(void** state){
 (void)state;
 	array_t a;
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	void* front = array_front(&a);
 	void* back = array_back(&a);
 	void* end = array_end(&a);
@@ -275,7 +274,7 @@ void test_array_copy(void** state){
 	uint32_t size = 2;
 	int v1 = 100, v2 = -100;
 
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	array_set(&a, &v1, 0);
 	array_set(&a, &v2, 1);
@@ -298,18 +297,14 @@ void test_array_copy(void** state){
 void test_array_copy_zero(void** state){
 	(void)state;
 	array_t a, b;
-
-	array_init(&a, sizeof(int));
-
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	void* result = array_copy(&b, &a);
-
 	assert_non_null(result);
 	assert_ptr_equal(result, &b);
 	assert_int_equal(a.size, b.size);
 	assert_int_equal(a.element_size, b.element_size);
 	assert_null(b.begin);
 	assert_null(b.end);
-
 	array_uninit(&a);
 	array_uninit(&b);
 }
@@ -320,7 +315,7 @@ void test_array_clear(void** state){
 	array_t a;
 	uint32_t size = 2;
 
-	array_init(&a, sizeof(int));
+	array_init_custom(&a, sizeof(int), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	void* r = array_clear(&a);
 
@@ -339,7 +334,7 @@ void test_array_iter_index(void** state){
 	array_t a;
 	uint32_t size = 10;
 
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	for(uint32_t i = 0; i != size; ++i){
@@ -357,7 +352,7 @@ void test_array_iter_ptr(void** state){
 	array_t a;
 	uint32_t size = 10;
 
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	for(uint32_t i = 0; i != size; ++i) array_set(&a, &i, i);
 
@@ -377,7 +372,7 @@ void test_array_iter_ptr(void** state){
 void test_array_iter_ptr_zero(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 
 	for(uint32_t *item = a.begin; item != a.end; ++item){
 		assert_true(0); // This code should never run
@@ -391,7 +386,7 @@ void test_array_insert(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 10;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	uint32_t v = 123;
@@ -412,7 +407,7 @@ void test_array_insert_out_of_bounds(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 10;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	uint32_t v = 123;
@@ -431,7 +426,7 @@ void test_array_insert_null(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 10;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	uint32_t insert_index = 5;
@@ -449,7 +444,7 @@ void test_array_insert_null(void** state){
 void test_array_insert_empty(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 
 	uint32_t v = 123;
 	uint32_t insert_index = 0;
@@ -469,7 +464,7 @@ void test_array_push_back(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	uint32_t v = 123;
@@ -489,7 +484,7 @@ void test_array_push_front(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 
 	uint32_t v = 123;
@@ -508,7 +503,7 @@ void test_array_remove(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	for(uint32_t i=0, *item = a.begin; item != a.end; ++item) *item = i++;
 
@@ -528,7 +523,7 @@ void test_array_remove(void** state){
 void test_array_remove_zero(void** state){
 	(void)state;
 	array_t a;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	
 	uint32_t remove_index = 1;
 	array_t* result = array_remove(&a, remove_index);
@@ -544,7 +539,7 @@ void test_array_pop_back(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	for(uint32_t i=0, *item = a.begin; item != a.end; ++item) *item = i++;
 
@@ -564,7 +559,7 @@ void test_array_pop_front(void** state){
 	(void)state;
 	array_t a;
 	uint32_t size = 5;
-	array_init(&a, sizeof(uint32_t));
+	array_init_custom(&a, sizeof(uint32_t), TEST_ALLOCATOR);
 	array_resize(&a, size);
 	for(uint32_t i=0, *item = a.begin; item != a.end; ++item) *item = i++;
 

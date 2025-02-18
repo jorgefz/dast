@@ -41,13 +41,14 @@ array_t* array_init(array_t* array, dast_sz element_size){
 	return array_init_custom(array, element_size, DAST_DEFAULT_ALLOCATOR);
 }
 
+#include <stdio.h>
+
 /** @brief Initialises an array via a given pointer with custom memory allocation functions.
 *   Should be freed with `array_uninit`.
 */
 array_t* array_init_custom(array_t* array, dast_sz element_size, dast_allocator_t alloc){
-    if(!array || !alloc.alloc || !alloc.realloc || !alloc.free) return NULL;
+	if(!array || !alloc.alloc || !alloc.realloc || !alloc.free) return NULL;
     if(element_size == 0) return NULL;
-
     *array = (array_t){0};
     array->element_size = element_size;
     array->alloc = alloc;

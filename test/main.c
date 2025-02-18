@@ -19,7 +19,7 @@ int main(int argc, const char* argv[]){
     printf("32-bit mode\n");
     #endif
 
-    #ifdef DAST_NO_STD
+    #ifdef DAST_NO_STDLIB
     printf("STD Lib disabled\n");
     #else
     printf("STD Lib enabled\n");

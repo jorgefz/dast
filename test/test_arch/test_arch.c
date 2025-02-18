@@ -18,17 +18,10 @@ void test_u32 (void** state) { assert_int_equal(sizeof(dast_u32),  sizeof(uint32
 void test_i64 (void** state) { assert_int_equal(sizeof(dast_i64),  sizeof(int64_t)); }
 void test_u64 (void** state) { assert_int_equal(sizeof(dast_u64),  sizeof(uint64_t)); }
 void test_bool(void** state) { assert_int_equal(sizeof(dast_bool), sizeof(int)); }
-
-void test_sz  (void** state) {
-#if defined(DAST_32BIT)
-    assert_int_equal(sizeof(dast_sz),   sizeof(size_t));
-#elif defined(DAST_64BIT)
-    assert_int_equal(sizeof(dast_sz),   sizeof(size_t));
-#endif
-}
+void test_sz  (void** state) { assert_int_equal(sizeof(dast_sz),   sizeof(size_t)); }
 
 void test_arch(void** state) {
-    #if !defined(DAST_32BIT) && !defined(DAST_64BIT)
+#if !defined(DAST_32BIT) && !defined(DAST_64BIT)
     assert_true(0);
-    #endif
+#endif
 }
