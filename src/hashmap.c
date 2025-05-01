@@ -119,7 +119,7 @@ hashmap_t* hashmap_init_custom(
     if(!alloc.alloc || !alloc.realloc || alloc.free) return NULL;
     map->alloc = alloc;
 
-    map->size = hashmap_next_prime(size_hint);
+    map->size = (dast_sz)hashmap_next_prime(size_hint);
     map->table = map->alloc.alloc(map->size * sizeof(hashmap_entry_t*));
     if(!map->table){
         return NULL;

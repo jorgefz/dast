@@ -73,6 +73,7 @@ string_t string_from_fmt_custom(dast_allocator_t alloc, const char fmt[], ...){
 
 string_t string_from_fmt(const char fmt[], ...){
 #ifdef DAST_NO_STDLIB
+    (void)fmt;
     return (string_t){0};
 #else
     /* Must repeat code in string_from_fmt_custom because in C89

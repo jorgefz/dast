@@ -73,7 +73,7 @@ dast_u64 hashmap_FNV1a64_hash(const void* data, dast_sz len);
  * @param size_hint starting number of buckets
  * @returns the input map on success, and NULL otherwise
  */
-hashmap_t* hashmap_init(hashmap_t* map, dast_u64 size_hint);
+hashmap_t* hashmap_init(hashmap_t* map, dast_sz size_hint);
 
 /** @brief Initialise hashmap via user-managed object with custom allocator and/or hash function.
  * Should be deleted with `hashmap_uninit`.
@@ -86,7 +86,7 @@ hashmap_t* hashmap_init(hashmap_t* map, dast_u64 size_hint);
 */
 hashmap_t* hashmap_init_custom(
 	hashmap_t*        map,
-	dast_u64          size_hint,
+	dast_sz          size_hint,
 	dast_allocator_t  alloc,
 	hashmap_hashfn_t  hash_fn
 );
@@ -106,7 +106,7 @@ void hashmap_uninit(hashmap_t* map);
  * @param key_len number of bytes in the key
  * @returns 1 if key exists in the map, and 0 otherwise
  */
-int hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_u64 key_len);
+int hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len);
 
 /** @brief Checks if a map has a given string key
  * @param map initialised hashmap
@@ -121,7 +121,7 @@ int hashmap_has_key(hashmap_t* map, string_t key);
  * @param key_len number of bytes in the key
  * @returns map element associated to the input key, or NULL if the key does not exist
  */
-void* hashmap_getb(hashmap_t* map, const void* bkey, dast_u64 key_len);
+void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len);
 
 /** @brief Retrieves the data associated with a key.
  * @param hashmap to query
@@ -143,7 +143,7 @@ void* hashmap_get(hashmap_t* map, string_t key);
  * If this function is used to replace a value with the same key, the previous value pointer is dropped!!
  * Moreover, unlike the value, a copy of the key IS stored.
  */
-hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_u64 key_len, void* value);
+hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void* value);
 
 /** @brief Adds a new key-value pair to a hashmap. If the key already exists, the value is replaced.
  * @param map hashmap to which to insert value
@@ -175,13 +175,13 @@ hashmap_t* hashmap_resize(hashmap_t* map);
  * Example:
  * 	```c
  * 	char* key = NULL;
- * 	dast_u64 len = 0;
+ * 	dast_sz len = 0;
  * 	do{
  * 		key = hashmap_iterb(map, key, &len);
  * 	} while(key);
  * 	```
  */
-void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_u64* key_len);
+void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len);
 
 /** @brief Returns the next key in a hashmap.
  * @param key Previous string key. To start iterating, input empty string (where `str` field is NULL).
