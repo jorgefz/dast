@@ -1,7 +1,5 @@
 #include "str.h"
 
-#include <stdarg.h>
-
 
 string_t string_from_chars_custom(const char* chars, dast_sz len, dast_allocator_t alloc){
     string_t s;
@@ -41,6 +39,8 @@ string_t string_from_len(dast_sz len){
 
 string_t string_from_fmt_custom(dast_allocator_t alloc, const char fmt[], ...){
 #ifdef DAST_NO_STDLIB
+    (void)fmt;
+    (void)alloc;
     return (string_t){0};
 #else
     int len;
