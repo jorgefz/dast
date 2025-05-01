@@ -82,6 +82,8 @@
     #include <stdint.h> /* sized types (e.g. uint32_t) */
     #include <stddef.h> /* size_t, NULL */
     #include <stdlib.h> /* malloc, realloc, free */
+    #include <stdarg.h> /* va_arg, etc */
+    #include <stdio.h>  /* vsnprintf */
 
     /* Fixed types */
     typedef int8_t   dast_i8;
