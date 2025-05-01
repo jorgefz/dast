@@ -16,14 +16,14 @@ static array_t* array_extend_capacity(array_t* array){
 	dast_sz capacity;
     void* data;
 
-    if(!array) return NULL;
+    if(!array) return dast_null;
 	capacity = array->capacity;
 
 	if(capacity == 0) capacity++;
 	else capacity *= 2;
 
 	data = array->alloc.realloc(array->data, capacity * array->element_size);
-	if(!data) return NULL;
+	if(!data) return dast_null;
 
 	array->data = data;
 	array->capacity = capacity;
@@ -47,8 +47,8 @@ array_t* array_init(array_t* array, dast_sz element_size){
 *   Should be freed with `array_uninit`.
 */
 array_t* array_init_custom(array_t* array, dast_sz element_size, dast_allocator_t alloc){
-	if(!array || !alloc.alloc || !alloc.realloc || !alloc.free) return NULL;
-    if(element_size == 0) return NULL;
+	if(!array || !alloc.alloc || !alloc.realloc || !alloc.free) return dast_null;
+    if(element_size == 0) return dast_null;
     *array = (array_t){0};
     array->element_size = element_size;
     array->alloc = alloc;
@@ -72,15 +72,15 @@ void array_uninit(array_t* array){
  *  @returns `dest` if successful, and NULL otherwise.
 */
 array_t* array_copy(array_t* dest, array_t* src){
-	if(!dest || !src) return NULL;
+	if(!dest || !src) return dast_null;
 	
 	void* success = array_init_custom(dest, src->element_size, src->alloc);
-	if(!success) return NULL;
+	if(!success) return dast_null;
 	if(src->size == 0) return dest;
 
 	if(!array_resize(dest, src->size)){
 		array_uninit(dest);
-		return NULL;
+		return dast_null;
 	}
 
 	dast_memcpy(dest->data, src->data, dest->size * dest->element_size);
@@ -94,7 +94,7 @@ array_t* array_resize(array_t* array, dast_sz size){
     void* data;
 
     if(!array || array->element_size == 0){
-        return NULL;
+        return dast_null;
     }
 
 	if(size <= array->size){
@@ -109,7 +109,7 @@ array_t* array_resize(array_t* array, dast_sz size){
 	capacity = dast_nearest_pow2(size);
 	if(capacity > array->capacity){
 		data = array->alloc.realloc(array->data, capacity * array->element_size);
-		if(!data) return NULL;
+		if(!data) return dast_null;
 		array->capacity = capacity;
 		array->data = data;
 	}
@@ -124,7 +124,7 @@ array_t* array_resize(array_t* array, dast_sz size){
 /* Overwrites an element at the given index with the given data */
 void* array_set(array_t* array, void* element, dast_sz index){
 	char* addr;
-    if(!array || array->element_size == 0 || index >= array->size) return NULL;
+    if(!array || array->element_size == 0 || index >= array->size) return dast_null;
     addr = (char*)array->data + index * array->element_size;
 	if(!element){
 		dast_memset(addr, 0, array->element_size);
@@ -138,27 +138,27 @@ void* array_set(array_t* array, void* element, dast_sz index){
 /* Returns a pointer to the element at the specified index */
 void* array_get(array_t* array, dast_sz index){
     char* addr;
-    if(!array || array->element_size == 0 || index >= array->size) return NULL;
+    if(!array || array->element_size == 0 || index >= array->size) return dast_null;
 	addr = (char*)array->data + index * array->element_size;
 	return addr;
 }
 
 /* Returns a pointer to the first element */
 void* array_front(array_t* array){
-	if(!array || array->size == 0) return NULL;
+	if(!array || array->size == 0) return dast_null;
 	return array->data;
 }
 
 /* Returns a pointer to the last element */
 void* array_back(array_t* array){
-	if(!array || array->size == 0) return NULL;
+	if(!array || array->size == 0) return dast_null;
 	return array_get(array, array->size-1);
 }
 
 /* Returns a pointer to first byte after the end of the array */
 void* array_end(array_t* array){
 	if(!array || !array->data || array->element_size == 0 || array->size == 0){
-		return NULL;
+		return dast_null;
 	}
 	return (char*)array_back(array) + array->element_size;
 }
@@ -171,12 +171,12 @@ void* array_insert(array_t* array, void* element, dast_sz index){
     dast_sz move_bytes;
 
     if(!array || array->element_size == 0 || index > array->size){
-		return NULL;
+		return dast_null;
 	}
 
 	if(array->size >= array->capacity || !array->data){
 		r = array_extend_capacity(array);
-		if(!r) return NULL;
+		if(!r) return dast_null;
 	}
 	
 	addr = (char*)(array->data) + index * array->element_size;
@@ -217,7 +217,7 @@ array_t* array_remove(array_t* array, dast_sz index){
     char *dest, *orig;
 
 	if(!array || !array->data || index >= array->size){
-		return NULL;
+		return dast_null;
 	}
 
 	if (index == array->size - 1){
@@ -240,7 +240,7 @@ array_t* array_remove(array_t* array, dast_sz index){
 
 /* Removes the element last element of the array */
 array_t* array_pop_back(array_t* array){
-	if(array->size == 0) return NULL;
+	if(array->size == 0) return dast_null;
 	return array_remove(array, array->size-1);
 }
 
@@ -251,10 +251,10 @@ array_t* array_pop_front(array_t* array){
 
 /* Removes all elements on the array */
 array_t* array_clear(array_t* array){
-	if(!array) return NULL;
+	if(!array) return dast_null;
 	array->size = 0;
-	array->begin = NULL;
-	array->end   = NULL;
+	array->begin = dast_null;
+	array->end   = dast_null;
 	return array;
 }
 

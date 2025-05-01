@@ -48,7 +48,7 @@ static dast_u64 hashmap_get_hash(hashmap_t* map, const void* key, dast_sz keylen
  * @return hashamp entry associated with the key
 */
 static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_sz key_len) {
-    if (!map || !bkey) return NULL;
+    if (!map || !bkey) return dast_null;
     dast_u64 hash = hashmap_get_hash(map, bkey, key_len);
     hashmap_entry_t* entry = map->table[hash];
 
@@ -58,7 +58,7 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
         }
         entry = entry->next;
     }
-    return NULL;
+    return dast_null;
 }
 
 /** Returns the hashmap element with the given string key
@@ -67,7 +67,7 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
  * @return hashamp entry associated with the key
 */
 static hashmap_entry_t* hashmap_lookup(hashmap_t* map, string_t key){
-    if (!key.str) return NULL;
+    if (!key.str) return dast_null;
     return hashmap_lookupb(map, key.str, key.len + 1); // include null-terminating char
 }
 
@@ -110,19 +110,19 @@ hashmap_t* hashmap_init_custom(
     dast_allocator_t  alloc,
 	hashmap_hashfn_t  hash_fn
 ){
-    if(!map) return NULL;
+    if(!map) return dast_null;
     *map = (hashmap_t){0};
 
     if (hash_fn) map->hash_fn = hash_fn;
     else         map->hash_fn = hashmap_FNV1a64_hash;
 
-    if(!alloc.alloc || !alloc.realloc || alloc.free) return NULL;
+    if(!alloc.alloc || !alloc.realloc || alloc.free) return dast_null;
     map->alloc = alloc;
 
     map->size = (dast_sz)hashmap_next_prime(size_hint);
     map->table = map->alloc.alloc(map->size * sizeof(hashmap_entry_t*));
     if(!map->table){
-        return NULL;
+        return dast_null;
     }
     memset(map->table, 0, map->size * sizeof(hashmap_entry_t*));
 
@@ -138,7 +138,7 @@ hashmap_t* hashmap_init_custom(
  */
 hashmap_t* hashmap_init(hashmap_t* map, dast_sz size_hint){
     return hashmap_init_custom(
-        map, size_hint, DAST_DEFAULT_ALLOCATOR, NULL
+        map, size_hint, DAST_DEFAULT_ALLOCATOR, dast_null
     );
 }
 
@@ -174,7 +174,7 @@ void hashmap_uninit(hashmap_t* map){
  */
 int hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len) {
     if (!bkey) return 0;
-    return (hashmap_lookupb(map, bkey, key_len) != NULL);
+    return (hashmap_lookupb(map, bkey, key_len) != dast_null);
 }
 
 /** @brief Checks if a map has a given string key
@@ -194,7 +194,7 @@ int hashmap_has_key(hashmap_t* map, string_t key){
  */
 void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len) {
     hashmap_entry_t* entry = hashmap_lookupb(map, bkey, key_len);
-    if (!entry) return NULL;
+    if (!entry) return dast_null;
     return entry->value;
 }
 
@@ -202,10 +202,10 @@ void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len) {
  * @param hashmap to query
  * @param bkey key to search for, which can be any set of bytes
  * @returns map element associated to the input key, or NULL if the key does not exist.
- * @note The function may also return NULL if the key exists but it is mapped to a NULL value.
+ * @note The function may also return dast_null if the key exists but it is mapped to a NULL value.
  */
 void* hashmap_get(hashmap_t* map, string_t key){
-    if (!key.str) return NULL;
+    if (!key.str) return dast_null;
     return hashmap_getb(map, key.str, key.len + 1); // include null-terminating char
 }
 
@@ -222,7 +222,7 @@ void* hashmap_get(hashmap_t* map, string_t key){
  * Moreover, unlike the value, a copy of the key IS stored.
  */
 hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void* value) {
-    if (!map || !bkey) return NULL;
+    if (!map || !bkey) return dast_null;
 
     hashmap_entry_t* entry = hashmap_lookupb(map, bkey, key_len);
     dast_u64 hash = map->hash_fn(bkey, key_len) % map->size;
@@ -237,13 +237,13 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
 
     // No matching key found
     entry = map->alloc.alloc(sizeof(hashmap_entry_t));
-    if (!entry) return NULL;
+    if (!entry) return dast_null;
 
     memset(entry, 0, sizeof(hashmap_entry_t));
     entry->key = map->alloc.alloc(key_len);
     if (!entry->key) {
         map->alloc.free(entry);
-        return NULL;
+        return dast_null;
     }
 
     memcpy(entry->key, bkey, key_len);
@@ -272,7 +272,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
  * Moreover, unlike the value, a copy of the string key IS stored.
  */
 hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value){
-    if (!key.str) return NULL;
+    if (!key.str) return dast_null;
     return hashmap_setb(map, key.str, key.len + 1, value); // include null-terminating char
 }
 
@@ -284,7 +284,7 @@ hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value){
  * reaches some fraction of the number of buckets.
  */
 hashmap_t* hashmap_resize(hashmap_t* map) {
-    if (!map) return NULL;
+    if (!map) return dast_null;
 
     dast_sz new_size = map->entries * HASHMAP_LOADING_FACTOR;
     hashmap_t new_map;
@@ -321,9 +321,9 @@ hashmap_t* hashmap_resize(hashmap_t* map) {
  * 	```
  */
 void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
-    if (!map || !map->table) return NULL;
+    if (!map || !map->table) return dast_null;
 
-    hashmap_entry_t* entry = NULL;
+    hashmap_entry_t* entry = dast_null;
     dast_u64 hash;
 
     // Search from the beginning of the hash table
@@ -336,12 +336,12 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
                 return map->table[i]->key;
             }
         }
-        return NULL;
+        return dast_null;
     }
 
     // Fetch the next key with the same hash (in a linked list)
     entry = hashmap_lookupb(map, bkey, *key_len);
-    if(!entry) return NULL; // Key provided but does not exist in the map??
+    if(!entry) return dast_null; // Key provided but does not exist in the map??
     if (entry->next) {
         if (key_len) {
             *key_len = entry->next->len;
@@ -359,7 +359,7 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
             return map->table[i]->key;
         }
     }
-    return NULL;
+    return dast_null;
 }
 
 /** @brief Returns the next key in a hashmap.

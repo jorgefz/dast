@@ -73,8 +73,8 @@
         typedef unsigned long long dast_u64;
     #endif
 
-    /* Constants */
-    #define NULL ((void*)0) /* Use dast_nil or dast_null instead */
+    /* Compile-time constants */
+    #define dast_null ((void*)0)
 
 #else
 
@@ -95,6 +95,9 @@
     typedef int64_t  dast_i64;
     typedef uint64_t dast_u64;
     typedef size_t   dast_sz;
+
+    /* Compile-time constants */
+    #define dast_null NULL
 
 #endif
 

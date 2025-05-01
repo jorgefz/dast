@@ -30,7 +30,7 @@ string_t string_from_chars(const char* chars, dast_sz len){
 }
 
 string_t string_from_len_custom(dast_sz len, dast_allocator_t alloc){
-    return string_from_chars_custom(NULL, len, alloc);
+    return string_from_chars_custom(dast_null, len, alloc);
 }
 
 string_t string_from_len(dast_sz len){
@@ -56,7 +56,7 @@ string_t string_from_fmt_custom(dast_allocator_t alloc, const char fmt[], ...){
     va_copy(arg2, arg1);
 
     /* Fetch expected length without writing to a buffer */
-    len = vsnprintf(NULL, 0, fmt, arg1);
+    len = vsnprintf(dast_null, 0, fmt, arg1);
     va_end(arg1);
 
     if(len < 0) return (string_t){0};
@@ -93,7 +93,7 @@ string_t string_from_fmt(const char fmt[], ...){
     va_copy(arg2, arg1);
 
     /* Fetch expected length without writing to a buffer */
-    len = vsnprintf(NULL, 0, fmt, arg1);
+    len = vsnprintf(dast_null, 0, fmt, arg1);
     va_end(arg1);
 
     if(len < 0) return (string_t){0};
@@ -112,5 +112,5 @@ void string_free(string_t* str){
     if (!str) return;
     str->len = 0;
     if(str->str) str->alloc.free(str->str);
-    str->str = NULL;
+    str->str = dast_null;
 }
