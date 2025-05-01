@@ -50,3 +50,13 @@ project "test"
     filter "system:windows"
         links {"cmocka.dll"}
 
+project "extras"
+    kind "ConsoleApp"
+    language "C"
+    cdialect "C89"
+    location "build/%{prj.name}"
+    objdir ("obj/" .. OutputDir .. "/%{prj.name}" )
+    targetdir ("bin/" .. OutputDir .. "/%{prj.name}" )
+    files { "extras/**.c", "extras/**.h" }
+    links { "dast" }
+    includedirs { "include" }
