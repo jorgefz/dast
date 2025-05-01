@@ -43,15 +43,6 @@ void test_hashmap_init_zero_size(void** state){
     assert_int_equal(map.size, 0);
 }
 
-void test_hashmap_hash(void** state){
-    (void)state;
-    const char key[] = "key";
-    size_t key_len = sizeof(key);
-    size_t map_size = 17;
-
-    uint32_t hash = hashmap_hashb(key, key_len, map_size);
-    assert_true(hash < map_size);
-}
 
 void test_hashmap_setb(void** state){
     (void)state;

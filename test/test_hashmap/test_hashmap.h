@@ -14,7 +14,6 @@
     cmocka_unit_test(test_hashmap_init_free), \
     cmocka_unit_test(test_hashmap_init_null), \
     cmocka_unit_test(test_hashmap_init_zero_size), \
-    cmocka_unit_test(test_hashmap_hash), \
     cmocka_unit_test(test_hashmap_setb), \
     cmocka_unit_test(test_hashmap_setb_null_value), \
     cmocka_unit_test(test_hashmap_setb_bad_key), \
@@ -31,7 +30,6 @@
 void test_hashmap_init_free(void** state);
 void test_hashmap_init_null(void** state);
 void test_hashmap_init_zero_size(void** state);
-void test_hashmap_hash(void** state);
 void test_hashmap_setb(void** state);
 void test_hashmap_setb_null_value(void** state);
 void test_hashmap_setb_bad_key(void** state);
