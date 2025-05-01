@@ -4,4 +4,7 @@
 #include "defs.h"
 #include "mem.h"
 
-#endif /* DATS_H */
+#include "str.h"
+#include "hashmap.h"
+
+#endif /* DAST_H */
