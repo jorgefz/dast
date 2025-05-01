@@ -38,7 +38,7 @@ typedef struct dast_string {
  * @param ALLOC Custom allocator
  * @returns string container storing copy of string literal
 */
-#define string_from_literal(LIT, ALLOC) string_from_chars_custom((LIT), sizeof(LIT)-1, (ALLOC))
+#define string_from_literal_custom(LIT, ALLOC) string_from_chars_custom((LIT), sizeof(LIT)-1, (ALLOC))
 
 /** @brief Creates string from a string literal
  * @param LIT character array literal
