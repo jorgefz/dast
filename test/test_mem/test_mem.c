@@ -19,7 +19,7 @@ void test_memeq(void** state){
 }
 
 void test_memset(void** state){
-    const char result[10] = "eeeeeeeeee";
+    const char result[] = "eeeeeeeeee";
     char buf[10];
     void* r;
     int val = (int)'e';
