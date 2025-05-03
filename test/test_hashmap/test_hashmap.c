@@ -227,10 +227,10 @@ void test_hashmap_iter_str(void** state){
     hashmap_set(&map, &keys[1], NULL);
     hashmap_set(&map, &keys[2], NULL);
     
-    string_t k_iter = (string_t){0}, *k = &k_iter;
+    string_t k = (string_t){0};
     dast_sz counter = 0;
-    while( (k = hashmap_iter(&map, k))->str ){
-        assert_int_equal(k->len, key_len);
+    while( hashmap_iter(&map, &k) ){
+        assert_int_equal(k.len, key_len);
         counter++;
     }
     assert_int_equal(counter, nkeys);
