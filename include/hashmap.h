@@ -107,16 +107,16 @@ void hashmap_uninit(hashmap_t* map);
  * @param map initialised hashmap
  * @param bkey key to find, can be any set of bytes
  * @param key_len number of bytes in the key
- * @returns 1 if key exists in the map, and 0 otherwise
+ * @returns `dast_true` if key exists in the map, and `dast_false` otherwise
  */
-int hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len);
+dast_bool hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len);
 
 /** @brief Checks if a map has a given string key
  * @param map initialised hashmap
  * @param key string key
- * @returns 1 if key exists in the map, and 0 otherwise
+ * @returns `dast_true` if key exists in the map, and `dast_false` otherwise
  */
-int hashmap_has_key(hashmap_t* map, string_t key);
+dast_bool hashmap_has_key(hashmap_t* map, string_t* key);
 
 /** @brief Retrieves the data associated with a key.
  * @param hashmap to query
@@ -132,7 +132,7 @@ void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len);
  * @returns map element associated to the input key, or NULL if the key does not exist.
  * @note The function may also return NULL if the key exists but it is mapped to a NULL value.
  */
-void* hashmap_get(hashmap_t* map, string_t key);
+void* hashmap_get(hashmap_t* map, string_t* key);
 
 /** @brief Adds a new key-value pair to a hashmap. If the key already exists, the value is replaced.
  * @param map hashmap to which to insert value
@@ -159,7 +159,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
  * If this function is used to replace a value with the same key, the previous value pointer is dropped.
  * Moreover, unlike the value, a copy of the string key IS stored.
  */
-hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value); 
+hashmap_t* hashmap_set(hashmap_t* map, string_t* key, void* value); 
 
 /** @brief Extends the hash table to a size equal to the next prime number from its current size.
  * @param map hashmap to extend
@@ -193,12 +193,13 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len);
  * Example:
  * 	```c
  * 	string_t key = (string_t){0};
+ * 	string_t* k = &key;
  * 	do{
- * 		key = hashmap_iter_keysb(map, key);
- * 	} while(key);
+ * 		k = hashmap_iter_keys(map, k);
+ * 	} while(string_ok(key));
  * 	```
 */
-string_t hashmap_iter(hashmap_t* map, string_t key);
+string_t* hashmap_iter(hashmap_t* map, string_t* key);
 
 
 #endif /* HASHMAP_H */
