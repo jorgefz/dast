@@ -191,10 +191,10 @@ void test_hashmap_set_str(void** state){
 
     string_t key = string_scoped_lit("key");
     int value = 99;
-    void* result = hashmap_set(&map, key, &value);
+    void* result = hashmap_set(&map, &key, &value);
 
     assert_non_null(result);
-    assert_ptr_equal(hashmap_get(&map, key), &value);
+    assert_ptr_equal(hashmap_get(&map, &key), &value);
 
     hashmap_uninit(&map);    
 }
@@ -207,9 +207,9 @@ void test_hashmap_has_key_str(void** state){
 
     string_t key = string_scoped_lit("key");
     int value = 99;
-    hashmap_set(&map, key, &value);
+    hashmap_set(&map, &key, &value);
 
-    assert_true(hashmap_has_key(&map, key));
+    assert_true(hashmap_has_key(&map, &key));
 
     hashmap_uninit(&map); 
 }
@@ -223,14 +223,14 @@ void test_hashmap_iter_str(void** state){
     dast_sz key_len = 4; // not counting null-terminating char
     string_t keys[] = {string_scoped_lit("key1"), string_scoped_lit("key2"), string_scoped_lit("key3")};
 
-    hashmap_set(&map, keys[0], NULL);
-    hashmap_set(&map, keys[1], NULL);
-    hashmap_set(&map, keys[2], NULL);
+    hashmap_set(&map, &keys[0], NULL);
+    hashmap_set(&map, &keys[1], NULL);
+    hashmap_set(&map, &keys[2], NULL);
     
-    string_t k = (string_t){0};
+    string_t k_iter = (string_t){0}, *k = &k_iter;
     dast_sz counter = 0;
-    while( (k = hashmap_iter(&map, k)).str ){
-        assert_int_equal(k.len, key_len);
+    while( (k = hashmap_iter(&map, k))->str ){
+        assert_int_equal(k->len, key_len);
         counter++;
     }
     assert_int_equal(counter, nkeys);
