@@ -190,13 +190,13 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len);
  * @param key Previous string key. To start iterating, input empty string (where `str` field is NULL).
  * @returns the next key in the hashmap.
  * @note When the functions returns NULL, there are no more keys to fetch.
+ * @warning Assumess all keys are null-terminating strings.
  * Example:
  * 	```c
  * 	string_t key = (string_t){0};
- * 	string_t* k = &key;
- * 	do{
- * 		k = hashmap_iter_keys(map, k);
- * 	} while(string_ok(key));
+ *  while( hashmap_iter_keys(map, &key) ){
+ *      ...
+ *  }
  * 	```
 */
 string_t* hashmap_iter(hashmap_t* map, string_t* key);

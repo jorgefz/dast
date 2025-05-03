@@ -21,10 +21,10 @@ static dast_u64 hashmap_isprime(dast_u64 n) {
     if (n <= 3)  return 1;
     if (n%2 == 0 || n%3 == 0) return 0;
 
-    for (dast_u64 i = 5; i*i <= n; i = i+6)
-        if (n%i == 0 || n%(i+2) == 0)
+    for (dast_u64 i = 5; i * i <= n; i = i + 6)
+        if (n%i == 0 || n%(i+2) == 0){
            return 0;
-   
+        }
     return 1;
 }
 
@@ -380,16 +380,18 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
  * Example:
  * 	```c
  * 	string_t key = (string_t){0};
- *  string_t *k = &key;
- * 	do{
- * 		k = hashmap_iter_keysb(map, k);
- * 	} while(string_ok(key));
+ *  while( hashmap_iter_keys(map, &key) ){
+ *      ...
+ *  }
  * 	```
 */
 string_t* hashmap_iter(hashmap_t* map, string_t* key){
     if(!key) return dast_null;
-    key->len++; // count null-terminating char when iterating
+
+    key->len++; // Account for null-terminating char when iterating
     key->str = hashmap_iterb(map, key->str, &key->len);
-    key->len--; // Dont count null-terminating char in string_t*
-    return key;
+    key->len--; // Ignore null-terminating char in string_t*
+
+    if(key->str) return key;
+    return dast_null;
 }
