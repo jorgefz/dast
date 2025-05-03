@@ -9,6 +9,8 @@
 #include "test_arch/test_arch.h"
 #include "test_mem/test_mem.h"
 #include "test_array/test_array.h"
+#include "test_str/test_str.h"
+#include "test_hashmap/test_hashmap.h"
 
 
 int main(int argc, const char* argv[]){
@@ -28,7 +30,9 @@ int main(int argc, const char* argv[]){
     static const struct CMUnitTest tests[] = {
         TEST_GROUP_ARCH,
         TEST_GROUP_MEM,
-        TEST_GROUP_ARRAY
+        TEST_GROUP_ARRAY,
+        TEST_GROUP_STRING,
+        TEST_GROUP_HASHMAP
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
