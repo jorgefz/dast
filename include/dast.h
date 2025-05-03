@@ -3,7 +3,7 @@
 
 #include "defs.h"
 #include "mem.h"
-
+#include "array.h"
 #include "str.h"
 #include "hashmap.h"
 
