@@ -10,7 +10,16 @@
 #include <cmocka.h>
 #include <stdlib.h>
 
-#define TEST_ALLOCATOR (dast_allocator_t){malloc, realloc, free}
+#define TEST_ALLOCATOR (dast_allocator_t){malloc_wrap, realloc_wrap, free}
+
+void* malloc_wrap(dast_sz bytes){
+	return malloc((size_t)bytes);
+}
+
+void* realloc_wrap(void* block, dast_sz bytes){
+	return realloc(block, (size_t)bytes);
+}
+
 
 
 // Verifies array is initialised properly

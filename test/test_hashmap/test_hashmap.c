@@ -3,8 +3,8 @@
 void test_hashmap_init_free(void** state){
     (void)state;
     hashmap_t map;
-    uint64_t size = 10;
-    uint64_t next_prime = 11;
+    dast_sz size = 10;
+    dast_sz next_prime = 11;
     void* result = hashmap_init(&map, size);
 
     assert_non_null(result);
@@ -20,7 +20,7 @@ void test_hashmap_init_free(void** state){
 
 void test_hashmap_init_null(void** state){
     (void)state;
-    uint64_t size = 10;
+    dast_sz size = 10;
     void* result = hashmap_init(NULL, size);
     assert_null(result);
 }
@@ -28,8 +28,8 @@ void test_hashmap_init_null(void** state){
 void test_hashmap_init_zero_size(void** state){
     (void)state;
     hashmap_t map;
-    uint64_t size = 0;
-    uint64_t next_prime = 2;
+    dast_sz size = 0;
+    dast_sz next_prime = 2;
     void* result = hashmap_init(&map, size);
 
     assert_non_null(result);
@@ -47,7 +47,7 @@ void test_hashmap_init_zero_size(void** state){
 void test_hashmap_setb(void** state){
     (void)state;
     const char key[] = "key";
-    size_t key_len = sizeof(key);
+    dast_sz key_len = sizeof(key);
     int data = 99;
     hashmap_t map;
 
@@ -64,7 +64,7 @@ void test_hashmap_setb(void** state){
 void test_hashmap_setb_null_value(void** state){
     (void)state;
     const char key[] = "key";
-    size_t key_len = sizeof(key);
+    dast_sz key_len = sizeof(key);
     hashmap_t map;
 
     hashmap_init(&map, 1);
@@ -92,7 +92,7 @@ void test_hashmap_setb_bad_key(void** state){
 void test_hashmap_getb_none(void** state){
     (void)state;
     const char key[] = "key";
-    size_t key_len = sizeof(key);
+    dast_sz key_len = sizeof(key);
     hashmap_t map;
 
     hashmap_init(&map, 1);
@@ -106,7 +106,7 @@ void test_hashmap_getb_none(void** state){
 void test_hashmap_has_keyb(void** state){
     (void)state;
     const char key[] = "key";
-    size_t key_len = sizeof(key);
+    dast_sz key_len = sizeof(key);
     int data = 99;
     hashmap_t map;
 
@@ -122,7 +122,7 @@ void test_hashmap_has_keyb(void** state){
 void test_hashmap_has_keyb_false(void** state){
     (void)state;
     const char key[] = "key";
-    size_t key_len = sizeof(key);
+    dast_sz key_len = sizeof(key);
     hashmap_t map;
 
     hashmap_init(&map, 1);
@@ -136,9 +136,9 @@ void test_hashmap_has_keyb_false(void** state){
 void test_hashmap_iterb(void** state){
     (void)state;
 
-    size_t nkeys = 3;
+    dast_sz nkeys = 3;
     const char* keys[] = {"key1", "key2", "key3"};
-    size_t key_len = 5;
+    dast_sz key_len = 5;
     hashmap_t map;
 
     hashmap_init(&map, 1);
@@ -147,12 +147,12 @@ void test_hashmap_iterb(void** state){
     hashmap_setb(&map, keys[0], key_len, NULL);
 
     char* k = NULL;
-    size_t s, counter = 0;
+    dast_sz s, counter = 0;
 
     while( (k = hashmap_iterb(&map, k, &s)) ){
         assert_int_equal(s, key_len);
         int matched = 0;
-        for(size_t i = 0; i != nkeys; ++i){
+        for(dast_sz i = 0; i != nkeys; ++i){
             if (memcmp(k, keys[i], key_len)){
                 matched = 1;
                 break;
@@ -173,7 +173,7 @@ void test_hashmap_iterb_empty(void** state){
     hashmap_init(&map, 1);
 
     char* k = NULL;
-    size_t s, counter = 0;
+    dast_sz s, counter = 0;
 
     while( (k = hashmap_iterb(&map, k, &s)) ){
         counter++;
@@ -219,8 +219,8 @@ void test_hashmap_iter_str(void** state){
 
     hashmap_t map;
     hashmap_init(&map, 1);
-    size_t nkeys = 3;
-    size_t key_len = 4; // not counting null-terminating char
+    dast_sz nkeys = 3;
+    dast_sz key_len = 4; // not counting null-terminating char
     string_t keys[] = {string_scoped_lit("key1"), string_scoped_lit("key2"), string_scoped_lit("key3")};
 
     hashmap_set(&map, keys[0], NULL);
@@ -228,7 +228,7 @@ void test_hashmap_iter_str(void** state){
     hashmap_set(&map, keys[2], NULL);
     
     string_t k = (string_t){0};
-    size_t counter = 0;
+    dast_sz counter = 0;
     while( (k = hashmap_iter(&map, k)).str ){
         assert_int_equal(k.len, key_len);
         counter++;
