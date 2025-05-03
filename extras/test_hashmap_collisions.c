@@ -8,8 +8,8 @@
 #include <windows.h>
 
 
-#define NKEYS 20000
-#define KEYLEN 10
+#define NKEYS 100000
+#define KEYLEN 30
 
 void test_hashmap_collisions(void){
 
@@ -91,7 +91,7 @@ void test_string_vs_int_keys(){
     }
     
     hashmap_t a;
-    hashmap_init(&a, 16);
+    hashmap_init(&a, NKEYS*2);
 
     // Insert keys
     printf("STR Inserting keys\n");
@@ -122,12 +122,12 @@ void test_string_vs_int_keys(){
     }
 
     hashmap_t b;
-    hashmap_init_custom(&b, 16, (dast_allocator_t){0}, NULL, _key_u64_cmp);
+    hashmap_init_custom(&b, NKEYS*2, (dast_allocator_t){0}, NULL, _key_u64_cmp);
 
     // Insert keys
     printf("INT Inserting keys\n");
     for(uint32_t i = 0; i != NKEYS; ++i){
-        hashmap_setb(&b, &keys[i], sizeof(uint64_t), NULL);
+        hashmap_setb(&b, &ikeys[i], sizeof(uint64_t), NULL);
     }
     
     // Fetch values
@@ -135,7 +135,7 @@ void test_string_vs_int_keys(){
     
     QueryPerformanceCounter(&start);
     for(uint32_t i = 0; i != NKEYS; ++i){
-        hashmap_getb(&b, &keys[i], sizeof(uint64_t));
+        hashmap_getb(&b, &ikeys[i], sizeof(uint64_t));
     }
     QueryPerformanceCounter(&end);
 
