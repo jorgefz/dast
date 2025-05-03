@@ -237,3 +237,17 @@ void test_hashmap_iter_str(void** state){
 
     hashmap_uninit(&map); 
 }
+
+
+
+dast_bool _key_u64_eq(const void* a, const void* b, dast_sz sz){
+    assert_int_equal(sz, sizeof(dast_u64));
+    return *(dast_u64*)a == *(dast_u64*)b;
+}
+
+void test_hashmap_custom_eq(void** state){
+    hashmap_t map;
+    hashmap_init_custom(&map, 10, (dast_allocator_t){0}, NULL, _key_u64_eq);
+    assert_ptr_equal(map.eq_fn, _key_u64_eq);
+    hashmap_uninit(&map);
+}
