@@ -19,7 +19,7 @@ typedef struct dast_string {
 } string_t;
 
 /** @brief Resolves to `dast_true` if a string was successfully initialised */
-#define string_is_valid(STR) (dast_bool)((STR).str)
+#define string_ok(STR) (dast_bool)((STR).str)
 
 /** @brief Creates a string_t from a string literal valid for the current scope
  *  @note no copy of the string data is made, `str` will simply point to the input character array.
