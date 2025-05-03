@@ -110,13 +110,14 @@ hashmap_t* hashmap_init_custom(
     dast_allocator_t  alloc,
 	hashmap_hashfn_t  hash_fn
 ){
+
     if(!map) return dast_null;
     *map = (hashmap_t){0};
 
     if (hash_fn) map->hash_fn = hash_fn;
     else         map->hash_fn = hashmap_FNV1a64_hash;
 
-    if(!alloc.alloc || !alloc.realloc || alloc.free) return dast_null;
+    if(!alloc.alloc || !alloc.realloc || !alloc.free) return dast_null;
     map->alloc = alloc;
 
     map->size = (dast_sz)hashmap_next_prime(size_hint);
@@ -137,6 +138,7 @@ hashmap_t* hashmap_init_custom(
  * @returns the input map on success, and NULL otherwise
  */
 hashmap_t* hashmap_init(hashmap_t* map, dast_sz size_hint){
+
     return hashmap_init_custom(
         map, size_hint, DAST_DEFAULT_ALLOCATOR, dast_null
     );
