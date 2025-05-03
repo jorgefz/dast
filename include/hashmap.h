@@ -39,6 +39,8 @@
 /** @typedef Type for hashing function */
 typedef dast_u64 (*hashmap_hashfn_t)(const void* data, dast_sz len);
 
+/** @typedef Type for key equality function */
+typedef dast_bool (*hashmap_eqfn_t)(const void* a, const void* b, dast_sz len);
 
 /** @struct hashmap_entry
  * @brief Hashmap entry. Holds a key-value pair.
@@ -60,6 +62,7 @@ typedef struct hashmap {
 
 	dast_allocator_t  alloc;    ///< Memory allocator
 	hashmap_hashfn_t  hash_fn;  ///< Hashing function
+	hashmap_eqfn_t    eq_fn;    ///< Key equality function
 } hashmap_t;
 
 
@@ -79,16 +82,16 @@ hashmap_t* hashmap_init(hashmap_t* map, dast_sz size_hint);
  * Should be deleted with `hashmap_uninit`.
  * @param map Hashmap to initialised
  * @param size_hint Starting number of buckets
- * @param hash_fn Hash function
- * @param alloc_fn Allocation function
- * @param realloc_fn Reallocation function
- * @param free_fn Deallocation function
+ * @param alloc Memory allocation functions
+ * @param hash_fn Hash function. If NULL, defaults to 64-bit FNV-1A.
+ * @param eq_fn Key equality function. Needed when hashes collide and keys need to be compared. If NULL, defaults to comparing the raw bytes of the two keys.
 */
 hashmap_t* hashmap_init_custom(
 	hashmap_t*        map,
 	dast_sz          size_hint,
 	dast_allocator_t  alloc,
-	hashmap_hashfn_t  hash_fn
+	hashmap_hashfn_t  hash_fn,
+	hashmap_eqfn_t    eq_fn
 );
 
 

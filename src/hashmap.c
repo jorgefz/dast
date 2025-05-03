@@ -53,7 +53,7 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
     hashmap_entry_t* entry = map->table[hash];
 
     while (entry) {
-        if (key_len == entry->len && dast_memeq(bkey, entry->key, key_len)) {
+        if (key_len == entry->len && map->eq_fn(bkey, entry->key, key_len)) {
             return entry;
         }
         entry = entry->next;
@@ -99,16 +99,16 @@ dast_u64 hashmap_FNV1a64_hash(const void* data, dast_sz len){
  * Should be deleted with `hashmap_uninit`.
  * @param map Hashmap to initialised
  * @param size_hint Starting number of buckets
- * @param hash_fn Hash function
- * @param alloc_fn Allocation function
- * @param realloc_fn Reallocation function
- * @param free_fn Deallocation function
+ * @param alloc Memory allocation functions. If NULL, defaults to 
+ * @param hash_fn Hash function. If NULL, defaults to 64-bit FNV-1A.
+ * @param eq_fn Key equality function. Needed when hashes collide and keys need to be compared. If NULL, defaults to comparing the raw bytes of the two keys.
 */
 hashmap_t* hashmap_init_custom(
 	hashmap_t*        map,
 	dast_sz           size_hint,
     dast_allocator_t  alloc,
-	hashmap_hashfn_t  hash_fn
+	hashmap_hashfn_t  hash_fn,
+    hashmap_eqfn_t    eq_fn
 ){
 
     if(!map) return dast_null;
@@ -117,8 +117,16 @@ hashmap_t* hashmap_init_custom(
     if (hash_fn) map->hash_fn = hash_fn;
     else         map->hash_fn = hashmap_FNV1a64_hash;
 
-    if(!alloc.alloc || !alloc.realloc || !alloc.free) return dast_null;
-    map->alloc = alloc;
+    if (eq_fn)   map->eq_fn   = eq_fn;
+    else         map->eq_fn   = dast_memeq;
+
+    if(!alloc.alloc || !alloc.realloc || !alloc.free){
+#ifdef DAST_NO_STDLIB
+        return dast_null;
+#else
+        map->alloc = DAST_DEFAULT_ALLOCATOR;
+#endif
+    } else map->alloc = alloc;
 
     map->size = (dast_sz)hashmap_next_prime(size_hint);
     map->table = map->alloc.alloc(map->size * sizeof(hashmap_entry_t*));
@@ -138,9 +146,8 @@ hashmap_t* hashmap_init_custom(
  * @returns the input map on success, and NULL otherwise
  */
 hashmap_t* hashmap_init(hashmap_t* map, dast_sz size_hint){
-
     return hashmap_init_custom(
-        map, size_hint, DAST_DEFAULT_ALLOCATOR, dast_null
+        map, size_hint, DAST_DEFAULT_ALLOCATOR, dast_null, dast_null
     );
 }
 
@@ -230,7 +237,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
     dast_u64 hash = map->hash_fn(bkey, key_len) % map->size;
 
     while (entry) {
-        if (key_len == entry->len && dast_memeq(bkey, entry->key, key_len)) {
+        if (key_len == entry->len && map->eq_fn(bkey, entry->key, key_len)) {
             entry->value = value;
             return map;
         }
@@ -280,7 +287,7 @@ hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value){
 
 /** @brief Extends the hash table to a size equal to the next prime number from its current size.
  * @param map hashmap to extend
- * @returns mthe input map if successful, and NULL otherwise
+ * @returns the input map if successful, and NULL otherwise
  * @note This is a CPU intensive operation, as the whole table is rehashed.
  * The table should resize itself automatically when the number of keys
  * reaches some fraction of the number of buckets.
@@ -290,7 +297,7 @@ hashmap_t* hashmap_resize(hashmap_t* map) {
 
     dast_sz new_size = map->entries * HASHMAP_LOADING_FACTOR;
     hashmap_t new_map;
-    hashmap_init_custom(&new_map, new_size, map->alloc, map->hash_fn);
+    hashmap_init_custom(&new_map, new_size, map->alloc, map->hash_fn, map->eq_fn);
     hashmap_entry_t* entry;
     dast_sz i;
 
