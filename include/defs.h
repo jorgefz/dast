@@ -19,6 +19,9 @@
 #ifndef DAST_DEFS_H
 #define DAST_DEFS_H
 
+/* Version */
+#define DAST_VERSION_MAJOR 1
+#define DAST_VERSION_MINOR 0
 
 /* Check architecture */
 
