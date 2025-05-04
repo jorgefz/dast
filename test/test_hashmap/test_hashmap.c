@@ -55,7 +55,7 @@ void test_hashmap_init_zero_size(void** state){
     (void)state;
     hashmap_t map;
     dast_sz size = 0, next_prime = 2;
-    void* result = hashmap_init(&map, size);
+    void* result = hashmap_init_custom(&map, size, TEST_ALLOCATOR, dast_null, dast_null);
 
     assert_non_null(result);
     assert_int_equal(map.size, next_prime);
@@ -84,6 +84,7 @@ void test_hashmap_init_custom_default(void** state){
 }
 
 void test_hashmap_init_custom_alloc(void** state){
+    (void)state;
     hashmap_t map;
     hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, NULL, NULL);
     
@@ -95,6 +96,7 @@ void test_hashmap_init_custom_alloc(void** state){
 }
 
 void test_hashmap_init_custom_hash(void** state){
+    (void)state;
     hashmap_t map;
     hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, test_hash_fn, NULL);
     
@@ -106,6 +108,7 @@ void test_hashmap_init_custom_hash(void** state){
 }
 
 void test_hashmap_init_custom_cmp(void** state){
+    (void)state;
     hashmap_t map;
     hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, test_hash_fn, test_key_u64_eq);
     
@@ -123,7 +126,7 @@ void test_hashmap_setb(void** state){
     int data = 99;
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     void* result = hashmap_setb(&map, key, key_len, &data);
 
     assert_ptr_equal(result, &map);
@@ -139,7 +142,7 @@ void test_hashmap_setb_null_value(void** state){
     dast_sz key_len = sizeof(key);
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     void* result = hashmap_setb(&map, key, key_len, NULL);
 
     assert_ptr_equal(result, &map);
@@ -153,7 +156,7 @@ void test_hashmap_setb_bad_key(void** state){
     (void)state;
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     void* result = hashmap_setb(&map, NULL, 0, NULL);
 
     assert_null(result);
@@ -167,7 +170,7 @@ void test_hashmap_getb_none(void** state){
     dast_sz key_len = sizeof(key);
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     void* result = hashmap_getb(&map, key, key_len);
     assert_null(result);
@@ -182,7 +185,7 @@ void test_hashmap_has_keyb(void** state){
     int data = 99;
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     hashmap_setb(&map, key, key_len, &data);
 
     int has_key = hashmap_has_keyb(&map, key, key_len);
@@ -197,7 +200,7 @@ void test_hashmap_has_keyb_false(void** state){
     dast_sz key_len = sizeof(key);
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     int has_key = hashmap_has_keyb(&map, key, key_len);
     assert_false(has_key);
@@ -213,7 +216,7 @@ void test_hashmap_iterb(void** state){
     dast_sz key_len = 5;
     hashmap_t map;
 
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     hashmap_setb(&map, keys[2], key_len, NULL);
     hashmap_setb(&map, keys[1], key_len, NULL);
     hashmap_setb(&map, keys[0], key_len, NULL);
@@ -242,7 +245,7 @@ void test_hashmap_iterb_empty(void** state){
     (void)state;
 
     hashmap_t map;
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     char* k = NULL;
     dast_sz s, counter = 0;
@@ -259,7 +262,7 @@ void test_hashmap_set_str(void** state){
     (void)state;
     
     hashmap_t map;
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     string_t key = string_scoped_lit("key");
     int value = 99;
@@ -275,7 +278,7 @@ void test_hashmap_get_str(void** state){
     (void)state;
     
     hashmap_t map;
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     string_t key = string_scoped_lit("key");
     int value = 99;
@@ -291,7 +294,7 @@ void test_hashmap_has_key_str(void** state){
     (void)state;
 
     hashmap_t map;
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
 
     string_t key = string_scoped_lit("key");
     int value = 99;
@@ -306,7 +309,7 @@ void test_hashmap_iter_str(void** state){
     (void)state;
 
     hashmap_t map;
-    hashmap_init(&map, START_SIZE);
+    hashmap_init_custom(&map, START_SIZE, TEST_ALLOCATOR, dast_null, dast_null);
     dast_sz nkeys = 3;
     dast_sz key_len = 4; // not counting null-terminating char
     string_t keys[] = {string_scoped_lit("key1"), string_scoped_lit("key2"), string_scoped_lit("key3")};
