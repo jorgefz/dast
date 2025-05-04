@@ -9,6 +9,7 @@
 
 
 void test_memeq(void** state){
+    (void)state;
     const char a[] = "Test String";
     const char b[] = "Test String";
     const char c[] = "Fake String";
@@ -19,6 +20,7 @@ void test_memeq(void** state){
 }
 
 void test_memset(void** state){
+    (void)state;
     const char result[] = "eeeeeeeeee";
     char buf[10];
     void* r;
@@ -31,6 +33,7 @@ void test_memset(void** state){
 }
 
 void test_memcpy(void**state){
+    (void)state;
     const char a[] = "Test String";
     char b[sizeof a];
 
@@ -40,7 +43,7 @@ void test_memcpy(void**state){
 }
 
 void test_memmove(void**state){
-
+    (void)state;
     const char a[] = "0123456789abcdefghij";
     const char result[] = "abcdefghijabcdefghij";
     char buf[20];
