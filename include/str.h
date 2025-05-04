@@ -15,21 +15,25 @@
 typedef struct dast_string {
     char* str;   ///< Character array
     dast_sz len; ///< Number of characters in the array
-    dast_allocator_t alloc; ///< Allocator
 } string_t;
 
 /** @brief Resolves to `dast_true` if a string was successfully initialised */
 #define string_ok(STR) (dast_bool)((STR).str)
 
-/** @brief Creates a string_t from a string literal valid for the current scope
+/** @brief Returns the allocator used by a string.
+ * @note Attempting to get the allocator of a scoped string results in undefined behaviour.
+*/
+#define string_get_alloc(S) ((S).str ? ((dast_allocator_t*)((S).str)-1) : dast_null)
+
+/** @brief Creates a string_t from a string literal valid for the current scope.
  *  @note no copy of the string data is made, `str` will simply point to the input character array.
- *  @note do not call `string_free` on the result of this macro
+ *  @note do not call `string_free` on the result of this macro.
 */
 #define string_scoped_lit(LIT) (string_t){.str = (char*)(LIT), .len = (sizeof(LIT)-1)}
 
 /** @brief Creates a string_t from a character array valid for the current scope
  *  @note no copy of the string data is made, `str` will simply point to the input character array.
- *  @note do not call `string_free` on the result of this macro
+ *  @note do not call `string_free` on the result of this macro.
 */
 #define string_scoped(PTR, LEN) (string_t){.str = (char*)(PTR), .len = (LEN)}
 
@@ -97,8 +101,24 @@ string_t string_from_fmt_custom(dast_allocator_t alloc, const char fmt[], ...);
 **/
 string_t string_from_fmt(const char fmt[], ...);
 
-/** @brief Frees character array in string. Sets `str` to NULL and `len` to zero
+/** @brief Duplicate an existing string.
+ * @param s String to copy.
+ * @param alloc Allocator for the new string.
+ * @returns New heap-allocated string.
+*/
+string_t string_copy_custom(string_t s, dast_allocator_t alloc);
+
+/** @brief Duplicate an existing string.
+ * @param s String to copy.
+ * @param alloc Allocator for the new string.
+ * @returns New heap-allocated string.
+ * @note Attempting to copy a scoped string results in undefined behaviour.
+*/
+string_t string_copy(string_t s);
+
+/** @brief Frees character array in string. Sets `str` to NULL and `len` to zero.
  * @param str string to deallocate.
+ * @note Attempting to free a scoped string results in undefined behaviour.
  */
 void string_free(string_t* str);
 
