@@ -4,6 +4,7 @@
 #define TEST_GROUP_STRING \
     cmocka_unit_test(test_string_scoped), \
     cmocka_unit_test(test_string_scoped_lit), \
+    cmocka_unit_test(test_string_default_alloc), \
     cmocka_unit_test(test_string_from_len), \
     cmocka_unit_test(test_string_from_len_zero), \
     cmocka_unit_test(test_string_from_chars), \
@@ -16,6 +17,7 @@
 
 void test_string_scoped(void** state);
 void test_string_scoped_lit(void** state);
+void test_string_default_alloc(void** state);
 void test_string_from_len(void** state);
 void test_string_from_len_zero(void** state);
 void test_string_from_chars(void** state);
