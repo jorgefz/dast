@@ -49,6 +49,18 @@ void test_string_default_alloc(void** state){
 #endif
 }
 
+void test_string_get_alloc(void** state){
+    (void)state;
+
+    string_t s = string_from_len_custom(8, TEST_ALLOCATOR);
+    dast_allocator_t* alloc = string_get_alloc(s);
+
+    assert_memory_equal(alloc, &TEST_ALLOCATOR, sizeof(dast_allocator_t));
+    assert_ptr_equal(alloc + 1, s.str);
+
+    string_free(&s);
+}
+
 void test_string_from_len(void** state){
     (void)state;
     size_t len = 10;
@@ -156,3 +168,33 @@ void test_string_from_fmt(void** state){
     string_free(&s);
 #endif
 }
+
+
+void test_string_copy_custom(void** state){
+    (void)state;
+
+    string_t s1 = string_from_literal_custom("TEST", TEST_ALLOCATOR);
+    string_t s2 = string_copy_custom(s1, TEST_ALLOCATOR);
+
+    assert_int_equal(s1.len, s2.len);
+    assert_memory_equal(s1.str, s2.str, s1.len);
+
+    string_free(&s1);
+    string_free(&s2);
+}
+
+
+void test_string_copy(void** state){
+    (void)state;
+
+    string_t s1 = string_from_literal_custom("TEST", TEST_ALLOCATOR);
+    string_t s2 = string_copy(s1);
+
+    assert_int_equal(s1.len, s2.len);
+    assert_memory_equal(s1.str, s2.str, s1.len);
+    assert_memory_equal(string_get_alloc(s1), string_get_alloc(s2), sizeof(dast_allocator_t));
+
+    string_free(&s1);
+    string_free(&s2);
+}
+
