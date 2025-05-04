@@ -14,6 +14,7 @@
 
 
 int main(int argc, const char* argv[]){
+    (void) argc, (void) argv;
 
     #ifdef DAST_64BIT
     printf("64-bit mode\n");
