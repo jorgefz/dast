@@ -66,9 +66,9 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
  * @param key string key
  * @return hashamp entry associated with the key
 */
-static hashmap_entry_t* hashmap_lookup(hashmap_t* map, string_t* key){
-    if (!key || !key->str) return dast_null;
-    return hashmap_lookupb(map, key->str, key->len + 1); // include null-terminating char
+static hashmap_entry_t* hashmap_lookup(hashmap_t* map, string_t key){
+    if (!key.str) return dast_null;
+    return hashmap_lookupb(map, key.str, key.len + 1); // include null-terminating char
 }
 
 
@@ -191,9 +191,9 @@ dast_bool hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len) {
  * @param key string key
  * @returns `dast_true` if key exists in the map, and `dast_false` otherwise
  */
-dast_bool hashmap_has_key(hashmap_t* map, string_t* key){
-    if (!key || !key->str) return dast_false;
-    return hashmap_has_keyb(map, key->str, key->len + 1); // include null-terminating char
+dast_bool hashmap_has_key(hashmap_t* map, string_t key){
+    if (!key.str) return dast_false;
+    return hashmap_has_keyb(map, key.str, key.len + 1); // include null-terminating char
 }
 
 /** @brief Retrieves the data associated with a key.
@@ -214,9 +214,9 @@ void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len) {
  * @returns map element associated to the input key, or NULL if the key does not exist.
  * @note The function may also return dast_null if the key exists but it is mapped to a NULL value.
  */
-void* hashmap_get(hashmap_t* map, string_t* key){
-    if (!key || !key->str) return dast_null;
-    return hashmap_getb(map, key->str, key->len + 1); // include null-terminating char
+void* hashmap_get(hashmap_t* map, string_t key){
+    if (!key.str) return dast_null;
+    return hashmap_getb(map, key.str, key.len + 1); // include null-terminating char
 }
 
 /** @brief Adds a new key-value pair to a hashmap. If the key already exists, the value is replaced.
@@ -281,9 +281,9 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
  * If this function is used to replace a value with the same key, the previous value pointer is dropped.
  * Moreover, unlike the value, a copy of the string key IS stored.
  */
-hashmap_t* hashmap_set(hashmap_t* map, string_t* key, void* value){
-    if (!key || !key->str) return dast_null;
-    return hashmap_setb(map, key->str, key->len + 1, value); // include null-terminating char
+hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value){
+    if (!key.str) return dast_null;
+    return hashmap_setb(map, key.str, key.len + 1, value); // include null-terminating char
 }
 
 /** @brief Extends the hash table to a size equal to the next prime number from its current size.

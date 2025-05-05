@@ -116,7 +116,7 @@ dast_bool hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len);
  * @param key string key
  * @returns `dast_true` if key exists in the map, and `dast_false` otherwise
  */
-dast_bool hashmap_has_key(hashmap_t* map, string_t* key);
+dast_bool hashmap_has_key(hashmap_t* map, string_t key);
 
 /** @brief Retrieves the data associated with a key.
  * @param hashmap to query
@@ -132,7 +132,7 @@ void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len);
  * @returns map element associated to the input key, or NULL if the key does not exist.
  * @note The function may also return NULL if the key exists but it is mapped to a NULL value.
  */
-void* hashmap_get(hashmap_t* map, string_t* key);
+void* hashmap_get(hashmap_t* map, string_t key);
 
 /** @brief Adds a new key-value pair to a hashmap. If the key already exists, the value is replaced.
  * @param map hashmap to which to insert value
@@ -159,7 +159,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
  * If this function is used to replace a value with the same key, the previous value pointer is dropped.
  * Moreover, unlike the value, a copy of the string key IS stored.
  */
-hashmap_t* hashmap_set(hashmap_t* map, string_t* key, void* value); 
+hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value); 
 
 /** @brief Extends the hash table to a size equal to the next prime number from its current size.
  * @param map hashmap to extend
