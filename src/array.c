@@ -31,7 +31,7 @@ static array_t* array_extend_capacity(array_t* array){
 }
 
 
-// -- INITIALIZATIONS -- //
+/* -- INITIALIZATIONS -- */
 
 /*
 Initialises an array via a given pointer.
@@ -120,7 +120,7 @@ array_t* array_resize(array_t* array, dast_sz size){
 	return array;
 }
 
-// -- SETTERS
+/* -- SETTERS -- */
 /* Overwrites an element at the given index with the given data */
 void* array_set(array_t* array, void* element, dast_sz index){
 	char* addr;
@@ -134,7 +134,7 @@ void* array_set(array_t* array, void* element, dast_sz index){
 	return addr;
 }
 
-// -- RETRIEVALS
+/* -- RETRIEVALS -- */
 /* Returns a pointer to the element at the specified index */
 void* array_get(array_t* array, dast_sz index){
     char* addr;
@@ -163,7 +163,7 @@ void* array_end(array_t* array){
 	return (char*)array_back(array) + array->element_size;
 }
 
-// -- INSERTING
+/* -- INSERTING -- */
 /* Inserts an element at the given index */
 void* array_insert(array_t* array, void* element, dast_sz index){
 	array_t* r;
@@ -183,12 +183,11 @@ void* array_insert(array_t* array, void* element, dast_sz index){
 	move_bytes = (array->size - index) * array->element_size;
 	
 	if(move_bytes > 0){
-		// displace elements to make space for new one
-		// this operation is invalid if you want to insert at the end of the array
+		/* Displace elements to make space for new one.
+		   This operation is invalid if you want to insert at the end of the array. */
 		dast_memmove(addr + array->element_size, addr, move_bytes);
 	}
 
-	// setting value
 	if(!element){
 		dast_memset(addr, 0, array->element_size);
 	} else {
@@ -210,7 +209,7 @@ void* array_push_front(array_t* array, void* element){
 	return array_insert(array, element, 0);
 }
 
-// -- DELETING
+/* -- DELETING -- */
 /* Removes the element at the given index */
 array_t* array_remove(array_t* array, dast_sz index){
     dast_sz move_bytes;

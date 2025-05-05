@@ -13,8 +13,8 @@
 * and the number of bytes `len` will not take it into account.
 * */
 typedef struct dast_string {
-    char* str;   ///< Character array
-    dast_sz len; ///< Number of characters in the array
+    char* str;   /**< Character array                    */
+    dast_sz len; /**< Number of characters in the array  */
 } string_t;
 
 /** @brief Resolves to `dast_true` if a string was successfully initialised */

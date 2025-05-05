@@ -8,15 +8,15 @@ string_t string_from_chars_custom(const char* chars, dast_sz len, dast_allocator
         return (string_t){0};
     }
 
-    // Reserve space for allocator and char array with terminating character
-    // Storing the allocator next to the char array saves us from storing it
-    // in the string_t object, making it lighter.
+    /* Reserve space for allocator and char array with terminating character
+       Storing the allocator next to the char array saves us from storing it
+       in the string_t object, making it lighter. */
     void* block = alloc.alloc( sizeof(char)*(len + 1) + sizeof(dast_allocator_t) );
     if(!block){
         return (string_t){0};
     }
 
-    // Copy allocator into space before character array
+    /* Copy allocator into space before character array */
     dast_allocator_t *ap = block;
     *ap = alloc;
     s.str = (char*)block + sizeof(dast_allocator_t);
@@ -141,7 +141,7 @@ void string_free(string_t* str){
 
     if(str->str){
         dast_allocator_t* alloc = string_get_alloc(*str);
-        alloc->free(alloc); // This works because char array is located right after the allocator in memory.
+        alloc->free(alloc); /* This works because char array is located right after the allocator in memory. */
     }
     
     str->len = 0;

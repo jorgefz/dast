@@ -16,7 +16,7 @@
 /** Checks whether an input number is prime */
 static dast_u64 hashmap_isprime(dast_u64 n) {
 
-    // Easy cases
+    /* Easy cases */ 
     if (n <= 1)  return 0;
     if (n <= 3)  return 1;
     if (n%2 == 0 || n%3 == 0) return 0;
@@ -68,7 +68,7 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
 */
 static hashmap_entry_t* hashmap_lookup(hashmap_t* map, string_t key){
     if (!key.str) return dast_null;
-    return hashmap_lookupb(map, key.str, key.len + 1); // include null-terminating char
+    return hashmap_lookupb(map, key.str, key.len + 1); /* Include null-terminating char */
 }
 
 
@@ -193,7 +193,7 @@ dast_bool hashmap_has_keyb(hashmap_t* map, const void* bkey, dast_sz key_len) {
  */
 dast_bool hashmap_has_key(hashmap_t* map, string_t key){
     if (!key.str) return dast_false;
-    return hashmap_has_keyb(map, key.str, key.len + 1); // include null-terminating char
+    return hashmap_has_keyb(map, key.str, key.len + 1); /* Include null-terminating char */
 }
 
 /** @brief Retrieves the data associated with a key.
@@ -216,7 +216,7 @@ void* hashmap_getb(hashmap_t* map, const void* bkey, dast_sz key_len) {
  */
 void* hashmap_get(hashmap_t* map, string_t key){
     if (!key.str) return dast_null;
-    return hashmap_getb(map, key.str, key.len + 1); // include null-terminating char
+    return hashmap_getb(map, key.str, key.len + 1); /* Include null-terminating char */
 }
 
 /** @brief Adds a new key-value pair to a hashmap. If the key already exists, the value is replaced.
@@ -245,7 +245,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
         entry = entry->next;
     }
 
-    // No matching key found
+    /* No matching key found */
     entry = map->alloc.alloc(sizeof(hashmap_entry_t));
     if (!entry) return dast_null;
 
@@ -262,7 +262,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
     entry->next = map->table[hash];
     map->table[hash] = entry;
 
-    // Extend if necessary
+    /* Extend if necessary */
     map->entries++;
     if (map->entries * HASHMAP_LOADING_FACTOR >= map->size) {
         hashmap_resize(map);
@@ -283,7 +283,7 @@ hashmap_t* hashmap_setb(hashmap_t* map, const void* bkey, dast_sz key_len, void*
  */
 hashmap_t* hashmap_set(hashmap_t* map, string_t key, void* value){
     if (!key.str) return dast_null;
-    return hashmap_setb(map, key.str, key.len + 1, value); // include null-terminating char
+    return hashmap_setb(map, key.str, key.len + 1, value); /* Include null-terminating char */
 }
 
 /** @brief Extends the hash table to a size equal to the next prime number from its current size.
@@ -302,7 +302,7 @@ hashmap_t* hashmap_resize(hashmap_t* map) {
     hashmap_entry_t* entry;
     dast_sz i;
 
-    // Rehash table
+    /* Rehash table */
     for (i = 0; i != map->size; ++i) {
         entry = map->table[i];
         while (entry) {
@@ -336,7 +336,7 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
     hashmap_entry_t* entry = dast_null;
     dast_u64 hash;
 
-    // Search from the beginning of the hash table
+    /* Search from the beginning of the hash table */
     if (!bkey) {
         for (dast_sz i = 0; i != map->size; ++i) {
             if (map->table[i]) {
@@ -349,9 +349,9 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
         return dast_null;
     }
 
-    // Fetch the next key with the same hash (in a linked list)
+    /* Fetch the next key with the same hash (in a linked list) */
     entry = hashmap_lookupb(map, bkey, *key_len);
-    if(!entry) return dast_null; // Key provided but does not exist in the map??
+    if(!entry) return dast_null; /* Key provided does not exist in the map */
     if (entry->next) {
         if (key_len) {
             *key_len = entry->next->len;
@@ -359,7 +359,7 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
         return entry->next->key;
     }
 
-    // Fetch the key in the table (with a different hash)
+    /* Fetch the key in the table (with a different hash) */
     hash = map->hash_fn(bkey, *key_len) % map->size;
     for (dast_u64 i = hash + 1; i != map->size; ++i) {
         if (map->table[i]) {
@@ -388,9 +388,9 @@ void* hashmap_iterb(hashmap_t* map, const char* bkey, dast_sz* key_len) {
 string_t* hashmap_iter(hashmap_t* map, string_t* key){
     if(!key) return dast_null;
 
-    key->len++; // Account for null-terminating char when iterating
+    key->len++; /* Account for null-terminating char when iterating */
     key->str = hashmap_iterb(map, key->str, &key->len);
-    key->len--; // Ignore null-terminating char in string_t*
+    key->len--; /* Ignore null-terminating char in string_t* */
 
     if(key->str) return key;
     return dast_null;

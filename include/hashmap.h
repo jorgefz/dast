@@ -6,7 +6,7 @@
 * Example code:
 * ```c
 *     hashmap_t map;
-*     hashmap_init(&map, 5); // initial expected size
+*     hashmap_init(&map, 5); // Starting capacity
 * 
 *     int x = 10;
 *     float y = 0.016;
@@ -20,7 +20,7 @@
 *     assert(x == a);
 *     assert(y == b);
 * 
-*     hashmap_uninit(&map); // does not free stored values
+*     hashmap_uninit(&map); // Does not free stored values
 * ```
 */
 
@@ -46,23 +46,23 @@ typedef dast_bool (*hashmap_eqfn_t)(const void* a, const void* b, dast_sz len);
  * @brief Hashmap entry. Holds a key-value pair.
  */
 typedef struct hashmap_entry {
-	char*    key;               ///< Key (may be string or binary)
-	dast_sz  len;				///< Number of bytes in the key	
-	void*    value;             ///< Data associated with the key
-	struct hashmap_entry* next; ///< Linked list for hash collisions
+	char*    key;               /**< Key (may be string or binary)   */
+	dast_sz  len;				/**< Number of bytes in the key	     */
+	void*    value;             /**< Data associated with the key    */
+	struct hashmap_entry* next; /**< Linked list for hash collisions */
 } hashmap_entry_t;
 
 /** @struct hashmap_t
  * @brief Hash map data structure. Holds key-value pairs accessed via hashes.
  */
 typedef struct hashmap {
-	dast_sz           size;     ///< Total number of buckets
-    dast_sz           entries;  ///< Number of filled buckets
-	hashmap_entry_t** table;    ///< Hash table of entries
+	dast_sz           size;     /**< Total number of buckets  */
+    dast_sz           entries;  /**< Number of filled buckets */
+	hashmap_entry_t** table;    /**< Hash table of entries    */
 
-	dast_allocator_t  alloc;    ///< Memory allocator
-	hashmap_hashfn_t  hash_fn;  ///< Hashing function
-	hashmap_eqfn_t    eq_fn;    ///< Key equality function
+	dast_allocator_t  alloc;    /**< Memory allocator       */
+	hashmap_hashfn_t  hash_fn;  /**< Hashing function       */
+	hashmap_eqfn_t    eq_fn;    /**< Key equality function  */
 } hashmap_t;
 
 

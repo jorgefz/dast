@@ -55,7 +55,7 @@ array_t* array_copy(array_t* dest, array_t* src);
 /* Initialises an array from existing data
 If a size of zero or empty data are provided, no elements are added to the array.
 */
-// array_t* array_from_data(void* data, uint32_t size, uint32_t element_size);
+/* array_t* array_from_data(void* data, uint32_t size, uint32_t element_size); */
 
 /** @brief Pre-allocates a given number of elements.
 * The new elements are not initialised.
