@@ -11,24 +11,34 @@ Features:
 * Fast
 * Simple
 * Lightweight
-* Fully tested
-* Written in pure C99
+* Written in C99
+* Fully tested with CMocka (https://cmocka.org/)
+* Premake5 build scripts included (https://premake.github.io/)
 * Works on both 32bit and 64bit architectures
-* Optional usage of C standard library
+* Works without the C standard library
 * Support for user-defined memory allocation functions
 
 ## Installation / Compilation
 
-A Premak5 file is included to compile DAST into a static library.
+A Premake5 file is included to compile DAST into a static library.
+To use it,
+1. Run `premake5 gmake2` on Linux or `premake5 vs2022` on Windows (with Visual Studio 2022 installed).
+2. Compile the code with `make dast` on Linux or by opening the `dast.sln` solution file on VS2022 on Windows.
+    * There are four possible configurations: 64bit with std lib (`arch64`), 64bit with no std lib (`arch64-nostd`), 32bit with std lib (`arch32`) and 32bit with no std lib (`arch32-nostd`).
+3. The output static libraries for each configuration will be found in the `bin` folder.
 
 To compile manually, include all files in the `include` folder and compile all source files in the `src` folder.
 
-Once compiled, link your project against the produced static library.
-
-Finally, in your code include the header below to access all data structures.
+Once compiled, link your project against the produced static library and, in your code, include the `dast.h `header.
 ```c
 #include <dast.h>
 ```
+
+To run the tests,
+1. Install CMocka following the documentation at https://cmocka.org/.
+2. Compile all files inside the `test` folder, linking against `dast` and `cmocka`.
+    * With the included premake5 script, simply run `premake5 gmake2` (or `premake5 vs2022` on Windows), and compile the project `test` with either Make (`make test`) or VStudio 2022. These projects can also generate executables for the tests for both 64bit and 32bit architectures as well as including/excluding the C standard library.
+3. Execute the resulting binaries.
 
 ## Code examples
 
