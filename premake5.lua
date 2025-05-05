@@ -37,7 +37,7 @@ project "dast"
 project "test"
     kind "ConsoleApp"
     language "C"
-    cdialect "C89"
+    cdialect "C11"
     location "build/%{prj.name}"
     objdir ("obj/" .. OutputDir .. "/%{prj.name}" )
     targetdir ("bin/" .. OutputDir .. "/%{prj.name}" )
@@ -53,7 +53,7 @@ project "test"
 project "extras"
     kind "ConsoleApp"
     language "C"
-    cdialect "C89"
+    cdialect "C11"
     location "build/%{prj.name}"
     objdir ("obj/" .. OutputDir .. "/%{prj.name}" )
     targetdir ("bin/" .. OutputDir .. "/%{prj.name}" )
