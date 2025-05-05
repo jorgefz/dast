@@ -1,4 +1,5 @@
 # dast
+
 DAta STructures (DAST).  A collection of some commonly used data structures written in C.
 
 * Dynamic array (`array_t`): a resizeable contiguous array containing items of the same type.
@@ -8,12 +9,36 @@ DAta STructures (DAST).  A collection of some commonly used data structures writ
 Features:
 
 * Fast
+* Simple
 * Lightweight
+* Fully tested
 * Written in pure C89
+* Works on both 32bit and 64bit architectures
 * Optional usage of C standard library
-* Support for user-defined memory management functions (malloc, realloc, free).
+* Support for user-defined memory allocation functions
 
-## array
+## Installation / Compilation
+
+A Premak5 file is included to compile DAST into a static library.
+
+To compile manually, include all files in the `include` folder and compile all source files in the `src` folder.
+
+Once compiled, link your project against the produced static library.
+
+Finally, in your code include the header below to access all data structures.
+```c
+#include <dast.h>
+```
+
+## Code examples
+
+### array_t
+
+* Includes many functions to add/remove elements, mirroring `std::vector` in C++ (i.e. push_front, push_back, pop_front, pop_back, insert), as well as forwards and reverse iterators.
+* Can store any data type.
+* Bounds checking.
+* Supports user-defined allocation functions. 
+* No macros whatsoever.
 
 ```c
 array_t data;
@@ -29,11 +54,20 @@ assert(data.size == 1);
 array_uninit(&data);
 ```
 
-## string
+### string_t
+
+* Thin wrapper around a pointer to a char array and a length. Only 16 bytes on 64bit architectures (8 bytes on 32bit).
+* Can create string_t objects from string literals, character arrays, and formatted strings. The underlying character array also null-terminated, so use like any other C char array but know its length at all times.
+* Support for scoped strings, which are automatically freed at the end of the current scope.
+* Support for user-defined allocation functions (malloc and free) with no impact on the size of the string object itself.
 
 ```c
 // Allocated on the heap, must be freed
 string_t s1 = string_from_literal("Allocated string");
+
+printf("%s\n", s1.str);
+printf("length %d\n", (int)s.len);
+
 string_free(&s1);
 
 // Allocated on the stack, automatically freed at the end of the current scope
@@ -49,7 +83,13 @@ string_t s4 = string_from_literal_custom("Custom allocated string", my_alloc); /
 string_free(&s4); // will use 'my_free'
 ```
 
-## hashmap
+### hashmap_t
+
+* Stores any data type, including different types for different keys.
+* Any data type can be used as a keys, with support for used-defined key comparison and hashing functions.
+* Provide the intial capacity of the hashmap on initialisation, avoiding the time cost of having to resize constantly when adding many elements.
+* Key-value pairs of keys with colliding hashes are stored using a linked list.
+* Additional functions that take string_t objects as keys.
 
 ```c
 hashmap_t map;
@@ -87,3 +127,4 @@ hashmap_t map3;
 hashmap_init_custom(&map3, 10, my_alloc, my_hash, my_cmp);
 hashmap_uninit(&map3);
 ```
+
