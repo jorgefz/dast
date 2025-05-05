@@ -61,17 +61,6 @@ static hashmap_entry_t* hashmap_lookupb(hashmap_t* map, const void* bkey, dast_s
     return dast_null;
 }
 
-/** Returns the hashmap element with the given string key
- * @param map hashmap in which to lookup keys
- * @param key string key
- * @return hashamp entry associated with the key
-*/
-static hashmap_entry_t* hashmap_lookup(hashmap_t* map, string_t key){
-    if (!key.str) return dast_null;
-    return hashmap_lookupb(map, key.str, key.len + 1); /* Include null-terminating char */
-}
-
-
 
 /* 
  * ----------------
