@@ -12,7 +12,7 @@ Features:
 * Simple
 * Lightweight
 * Fully tested
-* Written in pure C89
+* Written in pure C99
 * Works on both 32bit and 64bit architectures
 * Optional usage of C standard library
 * Support for user-defined memory allocation functions
