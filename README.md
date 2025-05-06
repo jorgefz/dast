@@ -100,6 +100,7 @@ string_free(&s4); // will use 'my_free'
 * Provide the intial capacity of the hashmap on initialisation, avoiding the time cost of having to resize constantly when adding many elements.
 * Key-value pairs of keys with colliding hashes are stored using a linked list.
 * Additional functions that take string_t objects as keys.
+* Default hashing function is 64bit FNV-1A. 
 
 ```c
 hashmap_t map;
@@ -108,7 +109,7 @@ hashmap_init(&map, 10); // Starting capacity will be next prime number after giv
 // Use string_t as key
 string_t key = string_scoped_lit("key");
 float value = 100.0f;
-hashmap_set(&map, &key, &value);
+hashmap_set(&map, key, &value);
 
 float ret = *(float*)hashmap_get(&map, key);
 assert(ret == value);
