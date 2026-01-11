@@ -9,9 +9,12 @@
  * +------------------------+----------------------------------------+
  * | Macro                  | Description                            |
  * +------------------------+----------------------------------------+
+ * | DAST_VERSION_MAJOR     | Major DAST version (semver).           |
+ * | DAST_VERSION_MINOR     | Minor DAST version (semver).           |
+ * | DAST_64BIT             | DAST was compiled in 64-bit mode.      |
+ * | DAST_32BIT             | DAST was compiled in 32-bit mode.      |
  * | DAST_NO_STDLIB         | Disables all standard library includes |
  * | DAST_DEFAULT_ALLOCATOR | Default allocator used by the library  |
- * | DAST_FREE              | Custom global memory free              |
  * +------------------------+----------------------------------------+
  * 
  */
@@ -22,7 +25,7 @@
 
 /* Version */
 #define DAST_VERSION_MAJOR 1
-#define DAST_VERSION_MINOR 0
+#define DAST_VERSION_MINOR 1
 
 /* Check architecture */
 
@@ -114,12 +117,12 @@ typedef void* (*dast_alloc_t)  (dast_sz size);                 /**< Typedef for 
 typedef void* (*dast_realloc_t)(void* block, dast_sz newsize); /**< Typedef for memory reallocation function */
 typedef void  (*dast_free_t)   (void* block);                  /**< Typedef for memory deallocation function */
 
-/** Memory management interface */
+/** @brief Memory management interface */
 typedef struct dast_allocator {
     dast_alloc_t   alloc;   /**< Allocation function   */
     dast_realloc_t realloc; /**< Reallocation function */
     dast_free_t    free;    /**< Deallocation function */
-} dast_allocator_t;
+} dast_allocator_t; /**< Typedef for dast_allocator */
 
 /* Default allocator */
 #ifdef DAST_NO_STDLIB
