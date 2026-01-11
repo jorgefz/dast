@@ -1,17 +1,18 @@
-/* 
+/** @file defs.h
+ * `defs.h` contains type definitions for the library as well as useful macros
+ *  and the definition of a memory allocation interface. 
+ *  
  * +--------------+
  * |    Macros    |
  * +--------------+
  * 
- * +-----------------+----------------------------------------+
- * | Macro           | Description                            |
- * +-----------------+----------------------------------------+
- * | DAST_NO_STDLIB  | Disables all standard library includes |
- * | DAST_ALLOC      | Custom global memory alloc             |
- * | DAST_REALLOC    | Custom global memory realloc           |
- * | DAST_FREE       | Custom global memory free              |
- * | DAST_HASH_64BIT | Enables 64-bit hashes                  |
- * | 
+ * +------------------------+----------------------------------------+
+ * | Macro                  | Description                            |
+ * +------------------------+----------------------------------------+
+ * | DAST_NO_STDLIB         | Disables all standard library includes |
+ * | DAST_DEFAULT_ALLOCATOR | Default allocator used by the library  |
+ * | DAST_FREE              | Custom global memory free              |
+ * +------------------------+----------------------------------------+
  * 
  */
 

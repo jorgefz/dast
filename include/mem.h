@@ -1,3 +1,8 @@
+/** @file mem.h
+* `mem.h` contains some utility functions memory that substitute existing stdlib functions. 
+*/
+
+
 #ifndef DAST_MEM_H
 #define DAST_MEM_H
 
