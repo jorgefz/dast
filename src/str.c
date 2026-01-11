@@ -1,7 +1,6 @@
 #include "str.h"
 
 
-
 string_t string_from_chars_custom(const char* chars, dast_sz len, dast_allocator_t alloc){
     string_t s = {0};
     if(!alloc.alloc || !alloc.free){
@@ -134,6 +133,15 @@ string_t string_copy_custom(string_t s, dast_allocator_t alloc){
 string_t string_copy(string_t s){
     dast_allocator_t* alloc = string_get_alloc(s);
     return string_from_chars_custom(s.str, s.len, *alloc);
+}
+
+/** @brief Duplicate an existing scoped string.
+ * @param s String to copy. Must have been created using the `string_scoped*` and `string_from_literal*` functions.
+ * @returns New heap-allocated string.
+ * @note The default dast allocator will be used.
+*/
+string_t string_copy_scoped(string_t s){
+    return string_copy_custom(s, DAST_DEFAULT_ALLOCATOR);
 }
 
 void string_free(string_t* str){
