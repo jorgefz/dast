@@ -2,7 +2,8 @@
 [![License](https://img.shields.io/badge/License-MIT-mediumorchid)](https://www.github.com/jorgefz/lince/blob/main/LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-passing-green)]()
 
-DAta STructures (DAST).  A collection of some commonly used data structures written in C.
+DAta STructures (DAST) is C library that includes commonly used data structures:
+
 
 * Dynamic array (`array_t`): a resizeable contiguous array containing items of the same type.
 * String (`string_t`): a thin wrapper for a character array plus a length.
@@ -14,11 +15,12 @@ Features:
 * Simple
 * Lightweight
 * Written in C99
+* Works without the C standard library
+* Works on both 32bit and 64bit architectures
+* Support for user-defined memory allocation functions
 * Fully tested with CMocka (https://cmocka.org/)
 * Premake5 build scripts included (https://premake.github.io/)
-* Works on both 32bit and 64bit architectures
-* Works without the C standard library
-* Support for user-defined memory allocation functions
+
 
 ## Installation / Compilation
 
@@ -29,6 +31,7 @@ To use it,
     * There are four possible configurations: 64bit with std lib (`arch64`), 64bit with no std lib (`arch64-nostd`), 32bit with std lib (`arch32`) and 32bit with no std lib (`arch32-nostd`).
     * To compile 32-bit version on 64-bit Linux, you might need to install the package `libc6-dev-i386`:
         * `sudo apt install libc6-dev-i386`
+    * There is also a helper script called "winmake.bat" to compile the project on Windows without opening VStudio. 
 3. The output static libraries for each configuration will be found in the `bin` folder.
 
 To compile manually, include all files in the `include` folder and compile all source files in the `src` folder.
@@ -47,6 +50,7 @@ To run the tests,
 2. Compile all files inside the `test` folder, linking against `dast` and `cmocka`.
     * With the included premake5 script, simply run `premake5 gmake` (or `premake5 vs2022` on Windows), and compile the project `test` with either Make (`make test`) or VStudio 2022. These projects can also generate executables for the tests for both 64bit and 32bit architectures as well as including/excluding the C standard library (e.g. `make test config=arch32-nostd`).
 3. Execute the resulting binaries to run the tests.
+
 
 ## Code examples
 
