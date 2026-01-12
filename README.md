@@ -1,4 +1,6 @@
 # dast
+[![License](https://img.shields.io/badge/License-MIT-mediumorchid)](https://www.github.com/jorgefz/lince/blob/main/LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-passing-green)]()
 
 DAta STructures (DAST).  A collection of some commonly used data structures written in C.
 
@@ -22,9 +24,11 @@ Features:
 
 A Premake5 file is included to compile DAST into a static library.
 To use it,
-1. Run `premake5 gmake2` on Linux or `premake5 vs2022` on Windows (with Visual Studio 2022 installed).
+1. Run `premake5 gmake` on Linux or `premake5 vs2022` on Windows (with Visual Studio 2022 installed).
 2. Compile the code with `make dast` on Linux or by opening the `dast.sln` solution file on VS2022 on Windows.
     * There are four possible configurations: 64bit with std lib (`arch64`), 64bit with no std lib (`arch64-nostd`), 32bit with std lib (`arch32`) and 32bit with no std lib (`arch32-nostd`).
+    * To compile 32-bit version on 64-bit Linux, you might need to install the package `libc6-dev-i386`:
+        * `sudo apt install libc6-dev-i386`
 3. The output static libraries for each configuration will be found in the `bin` folder.
 
 To compile manually, include all files in the `include` folder and compile all source files in the `src` folder.
@@ -36,9 +40,13 @@ Once compiled, link your project against the produced static library and, in you
 
 To run the tests,
 1. Install CMocka following the documentation at https://cmocka.org/.
+    * To enable CMocka testing support for 32-bit version of `dast` on 64-bit Linux, you might need to install the 32-bit version of CMocka on your system. For instance, for Ubuntu, you might need to run the following commands:
+        * `sudo dpkg --add-architecture i386`
+        * `sudo apt-get update`
+        * `sudo apt install libcmocka-dev:i386`
 2. Compile all files inside the `test` folder, linking against `dast` and `cmocka`.
-    * With the included premake5 script, simply run `premake5 gmake2` (or `premake5 vs2022` on Windows), and compile the project `test` with either Make (`make test`) or VStudio 2022. These projects can also generate executables for the tests for both 64bit and 32bit architectures as well as including/excluding the C standard library.
-3. Execute the resulting binaries.
+    * With the included premake5 script, simply run `premake5 gmake` (or `premake5 vs2022` on Windows), and compile the project `test` with either Make (`make test`) or VStudio 2022. These projects can also generate executables for the tests for both 64bit and 32bit architectures as well as including/excluding the C standard library (e.g. `make test config=arch32-nostd`).
+3. Execute the resulting binaries to run the tests.
 
 ## Code examples
 
@@ -47,7 +55,7 @@ To run the tests,
 * Includes many functions to add/remove elements, mirroring `std::vector` in C++ (i.e. push_front, push_back, pop_front, pop_back, insert), as well as forwards and reverse iterators.
 * Can store any data type.
 * Bounds checking.
-* Supports user-defined allocation functions. 
+* Supports per-object user-defined allocation functions. 
 * No macros whatsoever.
 
 ```c
@@ -69,7 +77,7 @@ array_uninit(&data);
 * Thin wrapper around a pointer to a char array and a length. Only 16 bytes on 64bit architectures (8 bytes on 32bit).
 * Can create string_t objects from string literals, character arrays, and formatted strings. The underlying character array also null-terminated, so use like any other C char array but know its length at all times.
 * Support for scoped strings, which are automatically freed at the end of the current scope.
-* Support for user-defined allocation functions (malloc and free) with no impact on the size of the string object itself.
+* Support for per-object user-defined allocation functions with no impact on the size of the string object itself.
 
 ```c
 // Allocated on the heap, must be freed
@@ -99,8 +107,9 @@ string_free(&s4); // will use 'my_free'
 * Any data type can be used as a keys, with support for used-defined key comparison and hashing functions.
 * Provide the intial capacity of the hashmap on initialisation, avoiding the time cost of having to resize constantly when adding many elements.
 * Key-value pairs of keys with colliding hashes are stored using a linked list.
-* Additional functions that take string_t objects as keys.
+* Additional familty of functions that take string_t objects as keys.
 * Default hashing function is 64bit FNV-1A. 
+* Supports per-object user-defined allocation functions. 
 
 ```c
 hashmap_t map;
