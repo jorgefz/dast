@@ -2,11 +2,10 @@
 [![License](https://img.shields.io/badge/License-MIT-mediumorchid)](https://www.github.com/jorgefz/lince/blob/main/LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-passing-green)]()
 
-DAta STructures (DAST) is C library that includes commonly used data structures:
-
+DAST (DAta STructures) is C library that includes some commonly used data structures:
 
 * Dynamic array (`array_t`): a resizeable contiguous array containing items of the same type.
-* String (`string_t`): a thin wrapper for a character array plus a length.
+* String (`string_t`): a thin wrapper around a character array plus a length.
 * Hashmap (`hashmap_t`): a hash table mapping one one data type to another.
 
 Features:
@@ -50,6 +49,13 @@ To run the tests,
 2. Compile all files inside the `test` folder, linking against `dast` and `cmocka`.
     * With the included premake5 script, simply run `premake5 gmake` (or `premake5 vs2022` on Windows), and compile the project `test` with either Make (`make test`) or VStudio 2022. These projects can also generate executables for the tests for both 64bit and 32bit architectures as well as including/excluding the C standard library (e.g. `make test config=arch32-nostd`).
 3. Execute the resulting binaries to run the tests.
+
+
+## Documentation
+
+The functions and macros in the header files have doxygen-style comments, so you can generate documentation for the library with Doxygen.
+
+Simply run `doxygen` and HTML and LaTeX documentation will be generated to a folder named `doxygen`.
 
 
 ## Code examples
@@ -151,4 +157,70 @@ hashmap_t map3;
 hashmap_init_custom(&map3, 10, my_alloc, my_hash, my_cmp);
 hashmap_uninit(&map3);
 ```
+
+## Function reference
+
+### array
+
+* array_init()
+* array_init_custom()
+* array_uninit()
+* array_copy()
+* array_resize()
+* array_set()
+* array_get()
+* array_front()
+* array_back()
+* array_end()
+* array_insert()
+* array_push_back()
+* array_push_front()
+* array_remove()
+* array_pop_back()
+* array_pop_front()
+* array_clear()
+
+### hashmap
+
+* hashmap_FNV1a64_hash()
+* hashmap_init()
+* hashmap_init_custom()
+* hashmap_uninit()
+* hashmap_has_keyb()
+* hashmap_has_key()
+* hashmap_getb()
+* hashmap_get()
+* hashmap_setb()
+* hashmap_set()
+* hashmap_resize()
+* hashmap_iterb()
+* hashmap_iter()
+
+### string
+
+* string_ok()
+* string_get_alloc()
+* string_scoped_lit()
+* string_scoped()
+* string_from_literal_custom()
+* string_from_literal()
+* string_from_chars_custom()
+* string_from_chars()
+* string_from_len_custom()
+* string_from_len()
+* string_from_fmt_custom()
+* string_from_fmt()
+* string_copy_custom()
+* string_copy()
+* string_copy_scoped()
+* string_free()
+
+### allocator
+
+* dast_get_alloc()
+* dast_set_alloc()
+* dast_memeq()
+* dast_memset()
+* dast_memcpy()
+* dast_memmove()
 
