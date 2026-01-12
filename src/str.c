@@ -149,7 +149,11 @@ void string_free(string_t* str){
 
     if(str->str){
         dast_allocator_t* alloc = string_get_alloc(*str);
-        alloc->free(alloc); /* This works because char array is located right after the allocator in memory. */
+        alloc->free(alloc);
+        /* This works because the allocator sits at the front of the
+        "* allocated memory block, which is the memory address that was returned
+         * when malloc was originally called.
+         */
     }
     
     str->len = 0;
