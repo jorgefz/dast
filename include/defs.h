@@ -112,25 +112,6 @@ typedef dast_u32 dast_bool; /**< Boolean type */
 #define dast_true  (dast_bool)1 /**< Boolean true */
 #define dast_false (dast_bool)0 /**< Boolean false */
 
-/* Memory allocation */
-typedef void* (*dast_alloc_t)  (dast_sz size);                 /**< Typedef for memory allocation function */ 
-typedef void* (*dast_realloc_t)(void* block, dast_sz newsize); /**< Typedef for memory reallocation function */
-typedef void  (*dast_free_t)   (void* block);                  /**< Typedef for memory deallocation function */
-
-/** @brief Memory management interface */
-typedef struct dast_allocator {
-    dast_alloc_t   alloc;   /**< Allocation function   */
-    dast_realloc_t realloc; /**< Reallocation function */
-    dast_free_t    free;    /**< Deallocation function */
-} dast_allocator_t; /**< Typedef for dast_allocator */
-
-/* Default allocator */
-#ifdef DAST_NO_STDLIB
-    #define DAST_DEFAULT_ALLOCATOR (dast_allocator_t){0}
-#else
-    #define DAST_DEFAULT_ALLOCATOR (dast_allocator_t){malloc, realloc, free}
-#endif
-
 /* Hashing */
 #ifdef DAST_HASH_64BIT
     typedef dast_u64 dast_hash_t; /**< 64-bit hash type */
