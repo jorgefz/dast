@@ -32,7 +32,7 @@ string_t string_from_chars_custom(const char* chars, dast_sz len, dast_allocator
 }
 
 string_t string_from_chars(const char* chars, dast_sz len){
-    return string_from_chars_custom(chars, len, DAST_DEFAULT_ALLOCATOR);
+    return string_from_chars_custom(chars, len, dast_get_alloc());
 }
 
 string_t string_from_len_custom(dast_sz len, dast_allocator_t alloc){
@@ -40,7 +40,7 @@ string_t string_from_len_custom(dast_sz len, dast_allocator_t alloc){
 }
 
 string_t string_from_len(dast_sz len){
-    return string_from_len_custom(len, DAST_DEFAULT_ALLOCATOR);
+    return string_from_len_custom(len, dast_get_alloc());
 }
 
 string_t string_from_fmt_custom(dast_allocator_t alloc, const char fmt[], ...){
@@ -141,7 +141,7 @@ string_t string_copy(string_t s){
  * @note The default dast allocator will be used.
 */
 string_t string_copy_scoped(string_t s){
-    return string_copy_custom(s, DAST_DEFAULT_ALLOCATOR);
+    return string_copy_custom(s, dast_get_alloc());
 }
 
 void string_free(string_t* str){
